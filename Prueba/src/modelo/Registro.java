@@ -76,7 +76,7 @@ public class Registro {
 	public void setDireccion(String direccion) {
 		this.direccion = direccion;
 	}
-	public boolean isActivo() {
+	public boolean getActivo() {
 		return activo;
 	}
 	public void setActivo(boolean activo) {

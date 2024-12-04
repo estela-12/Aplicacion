@@ -50,7 +50,7 @@ public class VistaRegistro extends JFrame {
 	private JTextField txtApellidoP;
 	private JTextField txtApellidoM;
 	private JTextField txtDireccion;
-	private JTextField tctCurp;
+	private JTextField txtCurp;
 	private JTextField txtNumeroT;
 	private JTextField txtCorreoE;
 	private JTextField txtIdCliente;
@@ -96,6 +96,23 @@ public class VistaRegistro extends JFrame {
 		tabla1.setBackground(new Color(153, 204, 255));
 		
 		JButton btnConsultarPersona = new JButton("Consultar");
+		btnConsultarPersona.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				DataRegistro dr=new DataRegistro();
+				Registro regi=dr.consultarRegistro(Integer.parseInt(txtIdCliente.getText()));
+				txtNombre.setText(regi.getNombre());
+				txtApellidoP.setText(regi.getApellidoP());
+				txtApellidoM.setText(regi.getApellidoM());
+				rdbtnMujer.setSelected(regi.getSexo());
+				rdbtnHombre.setSelected(regi.getSexo());
+				dcCalendario.setDate(regi.getFechaDeNacimiento());
+				txtCurp.setText(regi.getCurp());
+				txtNumeroT.setText(String.valueOf(regi.getNumeroTelefonico()));
+				txtCorreoE.setText(regi.getCorreoElectronico());
+				txtDireccion.setText(regi.getDireccion());
+				chckbxActivo.setSelected(regi.getActivo());
+			}
+		});
 		btnConsultarPersona.setVerticalTextPosition(SwingConstants.BOTTOM);
 		btnConsultarPersona.setVerticalAlignment(SwingConstants.BOTTOM);
 		btnConsultarPersona.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -124,7 +141,20 @@ public class VistaRegistro extends JFrame {
 		JButton btnGuardar = new JButton("Guardar");
 		btnGuardar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				guardarRegistro();
+				DataRegistro dr=new DataRegistro();
+				Registro regi=new Registro();
+				regi.setIdCliente(Integer.parseInt(txtIdCliente.getText()));
+				regi.setNombre(txtNombre.getText());
+				regi.setApellidoP(txtApellidoP.getText());
+				regi.setApellidoM(txtApellidoM.getText());
+				regi.setSexo(rdbtnMujer.isSelected());
+				regi.setSexo(rdbtnHombre.isSelected());
+				regi.setFechaDeNacimiento(dcCalendario.getDate());
+				regi.setCurp(txtCurp.getText());
+				regi.setNumeroTelefonico(Integer.parseInt(txtNumeroT.getText()));
+				regi.setCorreoElectronico(txtCorreoE.getText());
+				regi.setDireccion(txtDireccion.getText());
+				regi.setActivo(chckbxActivo.isSelected());
 			}
 		});
 		btnGuardar.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -169,8 +199,8 @@ public class VistaRegistro extends JFrame {
 		txtDireccion = new JTextField();
 		txtDireccion.setColumns(10);
 		
-		tctCurp = new JTextField();
-		tctCurp.setColumns(10);
+		txtCurp = new JTextField();
+		txtCurp.setColumns(10);
 		
 		txtNumeroT = new JTextField();
 		txtNumeroT.setColumns(10);
@@ -259,7 +289,7 @@ public class VistaRegistro extends JFrame {
 								.addGroup(gl_contentPane.createSequentialGroup()
 									.addComponent(lblCurp, GroupLayout.PREFERRED_SIZE, 166, GroupLayout.PREFERRED_SIZE)
 									.addGap(4)
-									.addComponent(tctCurp, GroupLayout.PREFERRED_SIZE, 444, GroupLayout.PREFERRED_SIZE))
+									.addComponent(txtCurp, GroupLayout.PREFERRED_SIZE, 444, GroupLayout.PREFERRED_SIZE))
 								.addGroup(gl_contentPane.createSequentialGroup()
 									.addComponent(lblNmeroDeTelefono, GroupLayout.PREFERRED_SIZE, 166, GroupLayout.PREFERRED_SIZE)
 									.addGap(4)
@@ -322,7 +352,7 @@ public class VistaRegistro extends JFrame {
 							.addGap(36)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 								.addComponent(lblCurp, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
-								.addComponent(tctCurp, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+								.addComponent(txtCurp, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 							.addGap(27)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 								.addComponent(lblNmeroDeTelefono, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
@@ -364,21 +394,8 @@ public class VistaRegistro extends JFrame {
 		contentPane.setLayout(gl_contentPane);
 		this.setExtendedState(Frame.MAXIMIZED_BOTH);
 	}
-	public void guardarRegistro() {
-		DataRegistro dr=new DataRegistro();
-		Registro regi=new Registro();
-		regi.setIdCliente(Integer.parseInt(txtIdCliente.getText()));
-		regi.setNombre(txtNombre.getText());
-		regi.setApellidoP(txtApellidoP.getText());
-		regi.setApellidoM(txtApellidoM.getText());
-		regi.setSexo(rdbtnMujer.isSelected());
-		regi.setSexo(rdbtnHombre.isSelected());
-		regi.setFechaDeNacimiento(dcCalendario.getDate());
-		regi.setCurp(tctCurp.getText());
-		regi.setNumeroTelefonico(Integer.parseInt(txtNumeroT.getText()));
-		regi.setCorreoElectronico(txtCorreoE.getText());
-		regi.setDireccion(txtDireccion.getText());
-		regi.setActivo(chckbxActivo.isSelected());
-		dr.guardar(regi);
-	}
+
+	
+	
+	
 }
