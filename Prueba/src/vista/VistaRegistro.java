@@ -394,6 +394,7 @@ public class VistaRegistro extends JFrame {
 		);
 		contentPane.setLayout(gl_contentPane);
 		this.setExtendedState(Frame.MAXIMIZED_BOTH);
+	
 	}
 
 	
