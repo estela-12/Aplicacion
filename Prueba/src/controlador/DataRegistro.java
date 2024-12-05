@@ -44,6 +44,8 @@ public class DataRegistro {
 
 				
 			}
+			ps.close();
+			cone.close();
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -58,7 +60,7 @@ public class DataRegistro {
 	public Registro consultarRegistro(int idCliente) {
 		Registro reg=new Registro();
 		String sql="select * from registros where idCliente=?";
-		conectar();
+		cone=co.conectar();
 		LocalDate VistaRegistro= null;
 		try {
 			ps=cone.prepareStatement(sql);
@@ -81,6 +83,9 @@ public class DataRegistro {
 			}else {
 				JOptionPane.showMessageDialog(null,"No se encontraron los datos");
 			}
+			ps.close();
+			cone.close();
+			rs.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
@@ -92,7 +97,7 @@ public class DataRegistro {
 	}
 	public boolean actualizar(Registro regi) {
 		boolean actuali=false;
-		conectar();
+		cone=co.conectar();
 		try {
 			ps=cone.prepareStatement("update registros set nombre=?,apellidoPaterno=?,apellidoMaterno=?,sexo=?,fechaDeNacimiento=?,curp=?,numeroTelefonico=?,correoElectronico=?,direccion=?,activo=true,where idCliente=?");
 			ps.setInt(1,regi.getIdCliente());
@@ -117,6 +122,8 @@ public class DataRegistro {
 
 				
 			}
+			ps.close();
+			cone.close();
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -130,7 +137,7 @@ public class DataRegistro {
 	
 	public boolean eliminar(int idCliente) {
 		boolean elimina=false;
-		conectar();
+		cone=co.conectar();
 		try {
 			ps=cone.prepareStatement("update registros set activo=false where idClientes=?");
 			ps.setInt(1, idCliente);
@@ -143,6 +150,8 @@ public class DataRegistro {
 
 				
 			}
+			ps.close();
+			cone.close();
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

@@ -55,7 +55,7 @@ public class DataReporte {
 	public Reporte consultarReporte(int idReporte) {
 		Reporte rep=new Reporte();
 		String sql="select * from reportes where idCliente=?";
-		conectar();
+		cone=co.conectar();
 		LocalDate VistaReportes= null;
 		try {
 			ps=cone.prepareStatement(sql);
@@ -73,6 +73,9 @@ public class DataReporte {
 			}else {
 				JOptionPane.showMessageDialog(null,"No se encontro el reporte");
 			}
+			ps.close();
+			cone.close();
+			rs.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
@@ -85,7 +88,7 @@ public class DataReporte {
 	
 	public boolean actualizar(Reporte repo) {
 		boolean actuali=false;
-		conectar();
+		cone=co.conectar();
 		try {
 			ps=cone.prepareStatement("update reportes set fechaDelLevantamientoDelReporte=?,fechaDelCorteDeAgua=?,direccion=?,numeroTelefonico=?,descripcionDelReporte=?,,where idReporte=?");
 			ps.setInt(1,repo.getIdReporte());
@@ -118,7 +121,7 @@ public class DataReporte {
 	}
 	public boolean eliminar(int idReporte) {
 		boolean elimina=false;
-		conectar();
+		cone=co.conectar();
 		try {
 			ps=cone.prepareStatement("update reportes set where idReportes=?");
 			ps.setInt(1, idReporte);
@@ -132,7 +135,7 @@ public class DataReporte {
 				
 			}
 			ps.close();
-			
+			cone.close();
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
