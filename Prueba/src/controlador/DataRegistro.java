@@ -29,7 +29,7 @@ public class DataRegistro {
 		boolean guarda=false;
 		conectar();
 		try {
-			ps=cone.prepareStatement("insert into registros values(?,?,?,?,?,?,?,?,?,,?,true)");
+			ps=cone.prepareStatement("insert into registros values(?,?,?,?,?,?,?,?,?,?,true)");
 			ps.setInt(1,regi.getIdCliente());
 			ps.setString(2,regi.getNombre());
 			ps.setString(3,regi.getApellidoP());
@@ -63,14 +63,14 @@ public class DataRegistro {
 		
 	}
 	
-	public Registro consultarRegistro(int regi) {
+	public Registro consultarRegistro(int idCliente) {
 		Registro reg=new Registro();
 		String sql="select * from registros where idCliente=?";
 		conectar();
 		LocalDate VistaRegistro= null;
 		try {
 			ps=cone.prepareStatement(sql);
-			ps.setInt(1, regi);
+			ps.setInt(1,idCliente);
 			ResultSet rs=ps.executeQuery();
 			if(rs.next()) {
 				reg.setIdCliente(rs.getInt(1));

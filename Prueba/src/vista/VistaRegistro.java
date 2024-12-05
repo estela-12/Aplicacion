@@ -155,6 +155,7 @@ public class VistaRegistro extends JFrame {
 				regi.setCorreoElectronico(txtCorreoE.getText());
 				regi.setDireccion(txtDireccion.getText());
 				regi.setActivo(chckbxActivo.isSelected());
+				dr.guardar(regi);
 			}
 		});
 		btnGuardar.setVerticalTextPosition(SwingConstants.BOTTOM);
