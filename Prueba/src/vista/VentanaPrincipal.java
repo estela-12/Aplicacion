@@ -22,6 +22,7 @@ import desplazable.Desface;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JInternalFrame;
 import javax.swing.JTabbedPane;
+import javax.swing.JToolBar;
 
 public class VentanaPrincipal extends JFrame {
 
@@ -68,7 +69,88 @@ public class VentanaPrincipal extends JFrame {
 		panelDesplega.setBackground(new Color(185, 220, 255));
 		panelDesplega.setLayout(null);
 		
+		JButton btnPagos = new JButton("Registro de Pagos");
+		btnPagos.setBorder(null);
+		btnPagos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				VistaPagos vpa=new VistaPagos();
+				vpa.setVisible(true);
+				dispose();
+				
+				
+			}
+		});
+		btnPagos.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnPagos.setVerticalAlignment(SwingConstants.BOTTOM);
+		btnPagos.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/iconos/finance_receipt_dollar_calculator_payment_money_icon_142011.png")));
+		btnPagos.setHorizontalTextPosition(SwingConstants.RIGHT);
+		btnPagos.setHorizontalAlignment(SwingConstants.LEFT);
+		btnPagos.setFont(new Font("Rockwell", Font.ITALIC, 16));
+		btnPagos.setContentAreaFilled(false);
+		btnPagos.setBounds(0, 295, 249, 62);
+		panelDesplega.add(btnPagos);
+		
+		JButton btnRegistro = new JButton("Registro de Clientes");
+		btnRegistro.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				VistaRegistro vreg=new VistaRegistro();
+				vreg.setVisible(true);
+				dispose();
+			}
+		});
+		btnRegistro.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnRegistro.setVerticalAlignment(SwingConstants.BOTTOM);
+		btnRegistro.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/iconos/4313132notesrecordstationerytakingwriting-115803_115776.png")));
+		btnRegistro.setHorizontalTextPosition(SwingConstants.RIGHT);
+		btnRegistro.setHorizontalAlignment(SwingConstants.LEFT);
+		btnRegistro.setFont(new Font("Rockwell", Font.ITALIC, 16));
+		btnRegistro.setContentAreaFilled(false);
+		btnRegistro.setBounds(0, 148, 249, 62);
+		panelDesplega.add(btnRegistro);
+		
+		JButton btnReportes = new JButton("Reportes");
+		btnReportes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				VistaReportes vrep=new VistaReportes();
+				vrep.setVisible(true);
+				dispose();
+			}
+		});
+		btnReportes.setBorder(null);
+		btnReportes.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnReportes.setVerticalAlignment(SwingConstants.BOTTOM);
+		btnReportes.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/iconos/shoppaymentorderbuy-27_icon-icons.com_73879.png")));
+		btnReportes.setHorizontalTextPosition(SwingConstants.RIGHT);
+		btnReportes.setHorizontalAlignment(SwingConstants.LEFT);
+		btnReportes.setFont(new Font("Rockwell", Font.ITALIC, 16));
+		btnReportes.setContentAreaFilled(false);
+		btnReportes.setBounds(0, 222, 249, 62);
+		panelDesplega.add(btnReportes);
+		GroupLayout gl_panel = new GroupLayout(panel);
+		gl_panel.setHorizontalGroup(
+			gl_panel.createParallelGroup(Alignment.LEADING)
+				.addComponent(panel_1, GroupLayout.DEFAULT_SIZE, 1616, Short.MAX_VALUE)
+				.addGroup(gl_panel.createSequentialGroup()
+					.addComponent(panelDesplega, GroupLayout.PREFERRED_SIZE, 249, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(1367, Short.MAX_VALUE))
+		);
+		gl_panel.setVerticalGroup(
+			gl_panel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel.createSequentialGroup()
+					.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 49, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(870, Short.MAX_VALUE))
+				.addGroup(Alignment.TRAILING, gl_panel.createSequentialGroup()
+					.addContainerGap(36, Short.MAX_VALUE)
+					.addComponent(panelDesplega, GroupLayout.PREFERRED_SIZE, 883, GroupLayout.PREFERRED_SIZE))
+		);
+		
+		JToolBar toolBar = new JToolBar();
+		toolBar.setBackground(new Color(4, 173, 255));
+		toolBar.setBounds(0, 0, 1096, 45);
+		panel_1.add(toolBar);
+		
 		JButton btnMenu = new JButton("");
+		toolBar.add(btnMenu);
 		btnMenu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -84,96 +166,8 @@ public class VentanaPrincipal extends JFrame {
 		});
 		btnMenu.setBorder(null);
 		btnMenu.setHorizontalAlignment(SwingConstants.LEFT);
-		btnMenu.setBounds(10, 0, 127, 45);
-		panel_1.add(btnMenu);
 		btnMenu.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/iconos/Menu_icon_icon-icons.com_71858.png")));
 		btnMenu.setContentAreaFilled(false);
-		
-
-		
-		JButton btnNewButton_1 = new JButton("HOME");
-		btnNewButton_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				
-			}
-		});
-		btnNewButton_1.setBorder(null);
-		btnNewButton_1.setHorizontalAlignment(SwingConstants.LEFT);
-		btnNewButton_1.setVerticalAlignment(SwingConstants.BOTTOM);
-		btnNewButton_1.setContentAreaFilled(false);
-		btnNewButton_1.setFont(new Font("Rockwell", Font.ITALIC, 16));
-		btnNewButton_1.setHorizontalTextPosition(SwingConstants.RIGHT);
-		btnNewButton_1.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/iconos/home_icon-icons.com_73532.png")));
-		btnNewButton_1.setBounds(0, 146, 249, 62);
-		panelDesplega.add(btnNewButton_1);
-		
-		JButton btnNewButton_1_1 = new JButton("Registro de Pagos");
-		btnNewButton_1_1.setBorder(null);
-		btnNewButton_1_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				
-			}
-		});
-		btnNewButton_1_1.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		btnNewButton_1_1.setVerticalAlignment(SwingConstants.BOTTOM);
-		btnNewButton_1_1.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/iconos/finance_receipt_dollar_calculator_payment_money_icon_142011.png")));
-		btnNewButton_1_1.setHorizontalTextPosition(SwingConstants.RIGHT);
-		btnNewButton_1_1.setHorizontalAlignment(SwingConstants.LEFT);
-		btnNewButton_1_1.setFont(new Font("Rockwell", Font.ITALIC, 16));
-		btnNewButton_1_1.setContentAreaFilled(false);
-		btnNewButton_1_1.setBounds(0, 210, 249, 62);
-		panelDesplega.add(btnNewButton_1_1);
-		
-		JButton btnNewButton_1_2 = new JButton("Registro de Clientes");
-		btnNewButton_1_2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				//tabbedPane.setSelectedIndex(2);
-			}
-		});
-		btnNewButton_1_2.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		btnNewButton_1_2.setVerticalAlignment(SwingConstants.BOTTOM);
-		btnNewButton_1_2.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/iconos/4313132notesrecordstationerytakingwriting-115803_115776.png")));
-		btnNewButton_1_2.setHorizontalTextPosition(SwingConstants.RIGHT);
-		btnNewButton_1_2.setHorizontalAlignment(SwingConstants.LEFT);
-		btnNewButton_1_2.setFont(new Font("Rockwell", Font.ITALIC, 16));
-		btnNewButton_1_2.setContentAreaFilled(false);
-		btnNewButton_1_2.setBounds(0, 280, 249, 62);
-		panelDesplega.add(btnNewButton_1_2);
-		
-		JButton btnReportes = new JButton("Reportes");
-		btnReportes.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		btnReportes.setBorder(null);
-		btnReportes.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		btnReportes.setVerticalAlignment(SwingConstants.BOTTOM);
-		btnReportes.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/iconos/shoppaymentorderbuy-27_icon-icons.com_73879.png")));
-		btnReportes.setHorizontalTextPosition(SwingConstants.RIGHT);
-		btnReportes.setHorizontalAlignment(SwingConstants.LEFT);
-		btnReportes.setFont(new Font("Rockwell", Font.ITALIC, 16));
-		btnReportes.setContentAreaFilled(false);
-		btnReportes.setBounds(0, 343, 249, 62);
-		panelDesplega.add(btnReportes);
-		GroupLayout gl_panel = new GroupLayout(panel);
-		gl_panel.setHorizontalGroup(
-			gl_panel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel.createSequentialGroup()
-					.addComponent(panelDesplega, GroupLayout.PREFERRED_SIZE, 249, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(1367, Short.MAX_VALUE))
-				.addComponent(panel_1, GroupLayout.DEFAULT_SIZE, 1616, Short.MAX_VALUE)
-		);
-		gl_panel.setVerticalGroup(
-			gl_panel.createParallelGroup(Alignment.TRAILING)
-				.addGroup(Alignment.LEADING, gl_panel.createSequentialGroup()
-					.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 49, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(899, Short.MAX_VALUE))
-				.addGroup(gl_panel.createSequentialGroup()
-					.addContainerGap(40, Short.MAX_VALUE)
-					.addComponent(panelDesplega, GroupLayout.PREFERRED_SIZE, 908, GroupLayout.PREFERRED_SIZE))
-		);
 		panel.setLayout(gl_panel);
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
