@@ -17,6 +17,7 @@ import java.awt.Image;
 
 import javax.swing.JButton;
 import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import javax.swing.JMenuBar;
 import javax.swing.JScrollPane;
@@ -37,6 +38,8 @@ import javax.swing.JRadioButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JCheckBox;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 
 public class VistaRegistro extends JFrame {
 
@@ -59,6 +62,9 @@ public class VistaRegistro extends JFrame {
 	private JRadioButton rdbtnMujer;
 	private JDateChooser dcCalendario;
 	private JCheckBox chckbxActivo ;
+	private DefaultTableModel modelo;
+	private TableRowSorter<DefaultTableModel> sorter;
+	private JScrollPane scrollPane ;
 
 	/**
 	 * Launch the application.
@@ -82,20 +88,69 @@ public class VistaRegistro extends JFrame {
 	public VistaRegistro() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1472, 1029);
+		
+		JMenuBar menuBar = new JMenuBar();
+		menuBar.setBackground(new Color(4, 173, 255));
+		setJMenuBar(menuBar);
+		
+		JMenu mnNewMenu = new JMenu("");
+		mnNewMenu.setIcon(new ImageIcon(VistaRegistro.class.getResource("/iconos/Menu_icon_icon-icons.com_71858.png")));
+		menuBar.add(mnNewMenu);
+		
+		JMenuItem mntmNewMenuItem = new JMenuItem("Menu Principal");
+		mntmNewMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				VentanaPrincipal vp=new VentanaPrincipal();
+				vp.setVisible(true);
+				dispose();
+			}
+		});
+		mnNewMenu.add(mntmNewMenuItem);
+		
+		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Reportes");
+		mntmNewMenuItem_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				VistaReportes vrep=new VistaReportes();
+				vrep.setVisible(true);
+				dispose();
+			}
+			
+		});
+		mnNewMenu.add(mntmNewMenuItem_1);
+		
+		JMenuItem mntmNewMenuItem_2 = new JMenuItem("Registro Pagos");
+		mntmNewMenuItem_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				VistaPagos vpa=new VistaPagos();
+				vpa.setVisible(true);
+				dispose();
+			}
+		});
+		mnNewMenu.add(mntmNewMenuItem_2);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(230, 247, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
 		
-		JScrollPane scrollPane = new JScrollPane();
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(688, 248, 1091, 423);
 		scrollPane.setBackground(new Color(153, 204, 255));
 		
 		tabla1 = new JTable();
 		scrollPane.setViewportView(tabla1);
 		tabla1.setBackground(new Color(153, 204, 255));
+		modelo=new DefaultTableModel();
+		Object [] titulos= {"Nombre", "Apellido Paterno", "Apellido Materno", "Sexo", "Fecha Nacimiento", "Direccion", "CURP", "Numero Telefonico","Correo"};
+		modelo.setColumnIdentifiers(titulos);
+		tabla1= new JTable(modelo);
+		scrollPane.setViewportView(tabla1);
+		
+		sorter=new TableRowSorter<>(modelo);
+		tabla1.setRowSorter(sorter);
 		
 		JButton btnConsultarPersona = new JButton("Consultar");
+		btnConsultarPersona.setBounds(284, 678, 87, 233);
 		btnConsultarPersona.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DataRegistro dr=new DataRegistro();
@@ -121,6 +176,7 @@ public class VistaRegistro extends JFrame {
 		btnConsultarPersona.setBorder(null);
 		
 		JButton btnEditar = new JButton("Editar");
+		btnEditar.setBounds(389, 844, 111, 67);
 		btnEditar.setContentAreaFilled(false);
 		btnEditar.setVerticalTextPosition(SwingConstants.BOTTOM);
 		btnEditar.setVerticalAlignment(SwingConstants.BOTTOM);
@@ -129,6 +185,7 @@ public class VistaRegistro extends JFrame {
 		btnEditar.setBorder(null);
 		
 		JButton btnEliminarPersona = new JButton("Eliminar");
+		btnEliminarPersona.setBounds(506, 860, 70, 51);
 		btnEliminarPersona.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnEliminarPersona.setVerticalTextPosition(SwingConstants.BOTTOM);
 		btnEliminarPersona.setVerticalAlignment(SwingConstants.BOTTOM);
@@ -139,6 +196,7 @@ public class VistaRegistro extends JFrame {
 		
 		
 		JButton btnGuardar = new JButton("Guardar");
+		btnGuardar.setBounds(125, 860, 76, 51);
 		btnGuardar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DataRegistro dr=new DataRegistro();
@@ -165,234 +223,144 @@ public class VistaRegistro extends JFrame {
 		btnGuardar.setBorder(null);
 		
 		txtBuscar = new JTextField();
-		txtBuscar.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyTyped(KeyEvent e) {
-				trsfiltro= new TableRowSorter(tabla1.getModel());
-				tabla1.setRowSorter(trsfiltro);
-			}
-			public void filtro() {
-				filtro =txtBuscar.getText();
-				trsfiltro.setRowFilter(RowFilter.regexFilter(txtBuscar.getText(), 0));
+		txtBuscar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String filtro=txtBuscar.getText().trim();
+				if(filtro.isEmpty()) {
+					sorter.setRowFilter(null);
+				}else {
+					sorter.setRowFilter(RowFilter.regexFilter("(?i)" + filtro));
+				}
+				
 			}
 		});
+		txtBuscar.setBounds(716, 146, 660, 20);
+		txtBuscar.addKeyListener(new KeyAdapter() {
+			
+		});
+	
 		txtBuscar.setHorizontalAlignment(SwingConstants.CENTER);
 		txtBuscar.setColumns(10);
 		ImageIcon icon= new ImageIcon(getClass().getResource("OIP.jpg"));
 		
 		JLabel lblBuscar = new JLabel("Buscar");
+		lblBuscar.setBounds(1402, 140, 111, 32);
 		lblBuscar.setIcon(new ImageIcon(VistaRegistro.class.getResource("/iconos/glassmagnifiermagnifyingsearchsearchingweb_123111.png")));
 		
 		JLabel lblNombre = new JLabel("Nombre:");
+		lblNombre.setBounds(68, 285, 83, 14);
 		lblNombre.setFont(new Font("Arial", Font.ITALIC, 12));
 		
 		txtNombre = new JTextField();
+		txtNombre.setBounds(238, 282, 438, 20);
 		txtNombre.setColumns(10);
 		
 		txtApellidoP = new JTextField();
+		txtApellidoP.setBounds(238, 333, 438, 20);
 		txtApellidoP.setColumns(10);
 		
 		txtApellidoM = new JTextField();
+		txtApellidoM.setBounds(238, 390, 444, 20);
 		txtApellidoM.setColumns(10);
 		
 	     dcCalendario = new JDateChooser();
+	     dcCalendario.setBounds(238, 447, 438, 20);
 		
 		txtDireccion = new JTextField();
+		txtDireccion.setBounds(238, 494, 444, 20);
 		txtDireccion.setColumns(10);
 		
 		txtCurp = new JTextField();
+		txtCurp.setBounds(238, 550, 444, 20);
 		txtCurp.setColumns(10);
 		
 		txtNumeroT = new JTextField();
+		txtNumeroT.setBounds(238, 597, 444, 20);
 		txtNumeroT.setColumns(10);
 		
 		txtCorreoE = new JTextField();
+		txtCorreoE.setBounds(238, 652, 444, 20);
 		txtCorreoE.setColumns(10);
 		
 		JLabel lblCorreoElectronico = new JLabel("Correo electronico:");
+		lblCorreoElectronico.setBounds(68, 652, 166, 20);
 		lblCorreoElectronico.setFont(new Font("Arial", Font.ITALIC, 12));
 		
 		JLabel lblNmeroDeTelefono = new JLabel("Número de telefono:");
+		lblNmeroDeTelefono.setBounds(68, 597, 166, 20);
 		lblNmeroDeTelefono.setFont(new Font("Arial", Font.ITALIC, 12));
 		
 		JLabel lblCurp = new JLabel("CURP:");
+		lblCurp.setBounds(68, 550, 166, 20);
 		lblCurp.setFont(new Font("Arial", Font.ITALIC, 12));
 		
 		JLabel lblDireccin = new JLabel("Dirección:");
+		lblDireccin.setBounds(68, 494, 166, 20);
 		lblDireccin.setFont(new Font("Arial", Font.ITALIC, 12));
 		
 		JLabel lblFechaDeNacimiento = new JLabel("Fecha de Nacimiento:");
+		lblFechaDeNacimiento.setBounds(68, 447, 166, 20);
 		lblFechaDeNacimiento.setFont(new Font("Arial", Font.ITALIC, 12));
 		
 		JLabel lblApellidoPaterno = new JLabel("Apellido Materno:");
+		lblApellidoPaterno.setBounds(68, 390, 166, 20);
 		lblApellidoPaterno.setFont(new Font("Arial", Font.ITALIC, 12));
 		
 		JLabel lblApellidoMaterno = new JLabel("Apellido Paterno:");
+		lblApellidoMaterno.setBounds(68, 333, 166, 20);
 		lblApellidoMaterno.setFont(new Font("Arial", Font.ITALIC, 12));
 		
 		JLabel lblImagen = new JLabel("Sexo:");
+		lblImagen.setBounds(91, 692, 60, 14);
 		
 	    rdbtnHombre = new JRadioButton("Hombre");
+	    rdbtnHombre.setBounds(219, 697, 63, 23);
 		
 	    rdbtnMujer = new JRadioButton("Mujer");
+	    rdbtnMujer.setBounds(413, 697, 63, 23);
 		
 		bg.add(rdbtnMujer);
 		bg.add(rdbtnHombre);
 		
 		JLabel lblNewLabel = new JLabel("Id cliente:");
+		lblNewLabel.setBounds(68, 249, 48, 14);
 		
 		txtIdCliente = new JTextField();
+		txtIdCliente.setBounds(238, 244, 438, 20);
 		txtIdCliente.setColumns(10);
 		
 	    chckbxActivo = new JCheckBox("Activo");
-		
-		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(
-			gl_contentPane.createParallelGroup(Alignment.TRAILING)
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addComponent(rdbtnHombre)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addGap(57)
-									.addComponent(btnGuardar, GroupLayout.PREFERRED_SIZE, 76, GroupLayout.PREFERRED_SIZE))
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addGap(23)
-									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-										.addComponent(rdbtnMujer, GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE)
-										.addComponent(lblImagen))))
-							.addGap(10)
-							.addComponent(btnConsultarPersona, GroupLayout.PREFERRED_SIZE, 87, GroupLayout.PREFERRED_SIZE)
-							.addGap(18)
-							.addComponent(btnEditar, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(btnEliminarPersona, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addComponent(lblApellidoMaterno, GroupLayout.PREFERRED_SIZE, 166, GroupLayout.PREFERRED_SIZE)
-									.addGap(4)
-									.addComponent(txtApellidoP, GroupLayout.PREFERRED_SIZE, 438, GroupLayout.PREFERRED_SIZE))
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addComponent(lblApellidoPaterno, GroupLayout.PREFERRED_SIZE, 166, GroupLayout.PREFERRED_SIZE)
-									.addGap(4)
-									.addComponent(txtApellidoM, GroupLayout.PREFERRED_SIZE, 444, GroupLayout.PREFERRED_SIZE))
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addComponent(lblFechaDeNacimiento, GroupLayout.PREFERRED_SIZE, 166, GroupLayout.PREFERRED_SIZE)
-									.addGap(4)
-									.addComponent(dcCalendario, GroupLayout.PREFERRED_SIZE, 438, GroupLayout.PREFERRED_SIZE))
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addComponent(lblDireccin, GroupLayout.PREFERRED_SIZE, 166, GroupLayout.PREFERRED_SIZE)
-									.addGap(4)
-									.addComponent(txtDireccion, GroupLayout.PREFERRED_SIZE, 444, GroupLayout.PREFERRED_SIZE))
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addComponent(lblCurp, GroupLayout.PREFERRED_SIZE, 166, GroupLayout.PREFERRED_SIZE)
-									.addGap(4)
-									.addComponent(txtCurp, GroupLayout.PREFERRED_SIZE, 444, GroupLayout.PREFERRED_SIZE))
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addComponent(lblNmeroDeTelefono, GroupLayout.PREFERRED_SIZE, 166, GroupLayout.PREFERRED_SIZE)
-									.addGap(4)
-									.addComponent(txtNumeroT, GroupLayout.PREFERRED_SIZE, 444, GroupLayout.PREFERRED_SIZE))
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addComponent(lblCorreoElectronico, GroupLayout.PREFERRED_SIZE, 166, GroupLayout.PREFERRED_SIZE)
-									.addGap(4)
-									.addComponent(txtCorreoE, GroupLayout.PREFERRED_SIZE, 444, GroupLayout.PREFERRED_SIZE))
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-										.addComponent(lblNombre, GroupLayout.PREFERRED_SIZE, 83, GroupLayout.PREFERRED_SIZE)
-										.addComponent(lblNewLabel))
-									.addGap(87)
-									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
-										.addComponent(txtIdCliente)
-										.addComponent(txtNombre, GroupLayout.DEFAULT_SIZE, 438, Short.MAX_VALUE))))
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 852, Short.MAX_VALUE)))
-					.addContainerGap())
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(711)
-					.addComponent(txtBuscar, GroupLayout.DEFAULT_SIZE, 660, Short.MAX_VALUE)
-					.addGap(26)
-					.addComponent(lblBuscar)
-					.addGap(80))
-				.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(chckbxActivo)
-					.addContainerGap(1442, Short.MAX_VALUE))
-		);
-		gl_contentPane.setVerticalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap(135, Short.MAX_VALUE)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(txtIdCliente, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addGap(18)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addGap(3)
-									.addComponent(lblNombre))
-								.addComponent(txtNombre, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-							.addGap(31)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblApellidoMaterno, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
-								.addComponent(txtApellidoP, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-							.addGap(37)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblApellidoPaterno, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
-								.addComponent(txtApellidoM, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-							.addGap(37)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblFechaDeNacimiento, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
-								.addComponent(dcCalendario, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-							.addGap(27)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblDireccin, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
-								.addComponent(txtDireccion, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-							.addGap(36)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblCurp, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
-								.addComponent(txtCurp, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-							.addGap(27)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblNmeroDeTelefono, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
-								.addComponent(txtNumeroT, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-							.addGap(35)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblCorreoElectronico, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
-								.addComponent(txtCorreoE, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-							.addPreferredGap(ComponentPlacement.RELATED))
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(lblBuscar)
-								.addComponent(txtBuscar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-							.addGap(76)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 423, GroupLayout.PREFERRED_SIZE)
-								.addComponent(lblNewLabel))
-							.addGap(7)))
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-								.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-									.addComponent(btnConsultarPersona, GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
-									.addComponent(btnEditar)
-									.addComponent(btnEliminarPersona))
-								.addComponent(btnGuardar))
-							.addGap(260))
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(14)
-							.addComponent(lblImagen)
-							.addGap(18)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(rdbtnHombre)
-								.addComponent(rdbtnMujer))
-							.addGap(35)
-							.addComponent(chckbxActivo)
-							.addGap(366))))
-		);
-		contentPane.setLayout(gl_contentPane);
+	    chckbxActivo.setBounds(82, 738, 119, 23);
+		contentPane.setLayout(null);
+		contentPane.add(rdbtnHombre);
+		contentPane.add(btnGuardar);
+		contentPane.add(rdbtnMujer);
+		contentPane.add(lblImagen);
+		contentPane.add(btnConsultarPersona);
+		contentPane.add(btnEditar);
+		contentPane.add(btnEliminarPersona);
+		contentPane.add(lblApellidoMaterno);
+		contentPane.add(txtApellidoP);
+		contentPane.add(lblApellidoPaterno);
+		contentPane.add(txtApellidoM);
+		contentPane.add(lblFechaDeNacimiento);
+		contentPane.add(dcCalendario);
+		contentPane.add(lblDireccin);
+		contentPane.add(txtDireccion);
+		contentPane.add(lblCurp);
+		contentPane.add(txtCurp);
+		contentPane.add(lblNmeroDeTelefono);
+		contentPane.add(txtNumeroT);
+		contentPane.add(lblCorreoElectronico);
+		contentPane.add(txtCorreoE);
+		contentPane.add(lblNombre);
+		contentPane.add(lblNewLabel);
+		contentPane.add(txtIdCliente);
+		contentPane.add(txtNombre);
+		contentPane.add(scrollPane);
+		contentPane.add(txtBuscar);
+		contentPane.add(lblBuscar);
+		contentPane.add(chckbxActivo);
 		this.setExtendedState(Frame.MAXIMIZED_BOTH);
 	
 	}
