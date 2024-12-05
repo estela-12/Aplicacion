@@ -12,24 +12,15 @@ import javax.swing.JOptionPane;
 import modelo.Reporte;
 
 public class DataReporte {
-	
+	Conxion co=new Conxion();
 
 	private Connection cone;
 	private PreparedStatement ps;
-	public Connection conectar() {
-		try {
-			cone=DriverManager.getConnection("jdbc:mysql://localhost:3306/mahe","root", "");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
-			JOptionPane.showMessageDialog(null,"Error al conectar"+ e);
-		}
-		return cone;
-	}
+
 	
 	public boolean guardar(Reporte repo) {
 		boolean guarda=false;
-		conectar();
+		cone=co.conectar(); 
 		try {
 			ps=cone.prepareStatement("insert into reportes values(?,?,?,?,?,?)");
 			ps.setInt(1,repo.getIdReporte());
@@ -133,13 +124,15 @@ public class DataReporte {
 			ps.setInt(1, idReporte);
 			int filasModificadas=ps.executeUpdate();
 			if(filasModificadas>0) {
-				JOptionPane.showMessageDialog(null,"Datos eliminados correctamente");
+				JOptionPane.showMessageDialog(null,"Datos Eliminados Correctamente");
 				
 			}else {
-				JOptionPane.showMessageDialog(null,"Datos no eliminados");
+				JOptionPane.showMessageDialog(null,"Datos no Eliminados");
 
 				
 			}
+			ps.close();
+			
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
