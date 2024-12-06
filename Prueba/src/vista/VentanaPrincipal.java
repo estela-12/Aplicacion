@@ -23,6 +23,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JInternalFrame;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
+import java.awt.Toolkit;
 
 public class VentanaPrincipal extends JFrame {
 
@@ -50,6 +51,8 @@ public class VentanaPrincipal extends JFrame {
 	 * Create the frame.
 	 */
 	public VentanaPrincipal() {
+		setTitle("Pagina Principal");
+		setIconImage(Toolkit.getDefaultToolkit().getImage(VentanaPrincipal.class.getResource("/iconos/WhatsApp Image 2024-11-29 at 14.20.07.jpeg")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1120, 624);
 		contentPane = new JPanel();
@@ -126,6 +129,7 @@ public class VentanaPrincipal extends JFrame {
 		btnReportes.setContentAreaFilled(false);
 		btnReportes.setBounds(0, 222, 249, 62);
 		panelDesplega.add(btnReportes);
+		ImageIcon ico=new ImageIcon(getClass().getResource("/iconos/WhatsApp Image 2024-11-29 at 14.40.06 (1).jpeg"));
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
@@ -138,11 +142,13 @@ public class VentanaPrincipal extends JFrame {
 			gl_panel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel.createSequentialGroup()
 					.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 49, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(870, Short.MAX_VALUE))
-				.addGroup(Alignment.TRAILING, gl_panel.createSequentialGroup()
-					.addContainerGap(36, Short.MAX_VALUE)
+					.addContainerGap(845, Short.MAX_VALUE))
+				.addGroup(gl_panel.createSequentialGroup()
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 					.addComponent(panelDesplega, GroupLayout.PREFERRED_SIZE, 883, GroupLayout.PREFERRED_SIZE))
 		);
+		
+		
 		
 		JToolBar toolBar = new JToolBar();
 		toolBar.setBackground(new Color(4, 173, 255));
@@ -174,6 +180,8 @@ public class VentanaPrincipal extends JFrame {
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addComponent(panel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 		);
+		
+		
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addComponent(panel, GroupLayout.PREFERRED_SIZE, 878, GroupLayout.PREFERRED_SIZE)
