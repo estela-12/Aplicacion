@@ -13,5 +13,6 @@
 	<classpathentry kind="lib" path="junit-4.6.jar"/>
 	<classpathentry kind="lib" path="driver/Desplazable.jar"/>
 	<classpathentry kind="lib" path="driver/TimingFramework-0.55.jar"/>
+	<classpathentry kind="lib" path="driver/io-7.1.9-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -12,7 +12,7 @@ public class Conxion {
 	private PreparedStatement ps;
 	public Connection conectar() {
 		try {
-			cone=DriverManager.getConnection("jdbc:mysql://localhost:3306/mahe","root", "");
+			cone=DriverManager.getConnection("jdbc:mysql://localhost:3306/mahe4","root", "");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
