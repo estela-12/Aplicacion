@@ -361,11 +361,27 @@ public class VistaRegistro extends JFrame {
 		contentPane.add(txtBuscar);
 		contentPane.add(lblBuscar);
 		contentPane.add(chckbxActivo);
+		
+		JButton btnNewButton = new JButton("Guardar");
+		btnNewButton.setIcon(new ImageIcon("C:\\Users\\Hp\\Downloads\\salvar111.png"));
+		btnNewButton.setBounds(193, 725, 89, 59);
+		contentPane.add(btnNewButton);
+		
+		JButton btnNewButton_1 = new JButton("Consultar");
+		btnNewButton_1.setIcon(new ImageIcon("C:\\Users\\Hp\\Downloads\\consulta1.png"));
+		btnNewButton_1.setBounds(359, 738, 111, 78);
+		contentPane.add(btnNewButton_1);
+		
+		JButton btnNewButton_2 = new JButton("Actualizar");
+		btnNewButton_2.setIcon(new ImageIcon("C:\\Users\\Hp\\Downloads\\actualizar-datos1.png"));
+		btnNewButton_2.setBounds(515, 738, 89, 78);
+		contentPane.add(btnNewButton_2);
+		
+		JButton btnNewButton_3 = new JButton("Eliminar");
+		btnNewButton_3.setIcon(new ImageIcon("C:\\Users\\Hp\\Downloads\\error.png"));
+		btnNewButton_3.setBounds(652, 738, 76, 78);
+		contentPane.add(btnNewButton_3);
 		this.setExtendedState(Frame.MAXIMIZED_BOTH);
 	
 	}
-
-	
-	
-	
 }

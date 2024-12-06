@@ -8,7 +8,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="driver/mysql-connector-j-9.1.0.jar"/>
 	<classpathentry kind="lib" path="driver/jcalendar-1.4.jar"/>
-	<classpathentry kind="lib" path="jgoodies-common-1.2.0.jar"/>
 	<classpathentry kind="lib" path="jgoodies-looks-2.4.1.jar"/>
 	<classpathentry kind="lib" path="junit-4.6.jar"/>
 	<classpathentry kind="lib" path="driver/Desplazable.jar"/>

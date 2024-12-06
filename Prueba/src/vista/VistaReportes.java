@@ -62,10 +62,10 @@ public class VistaReportes extends JFrame {
 		textField = new JTextField();
 		textField.setColumns(10);
 		
-		JLabel lblNombre = new JLabel("Nombre:");
+		JLabel lblNombre = new JLabel("Id Reporte");
 		lblNombre.setFont(new Font("Arial", Font.ITALIC, 12));
 		
-		JLabel lblApellidoMaterno = new JLabel("Apellido Paterno:");
+		JLabel lblApellidoMaterno = new JLabel("Fecha del levantamiento del reporte:");
 		lblApellidoMaterno.setFont(new Font("Arial", Font.ITALIC, 12));
 		
 		textField_1 = new JTextField();
@@ -87,25 +87,27 @@ public class VistaReportes extends JFrame {
 		btnNewButton_3.setIcon(new ImageIcon(VistaReportes.class.getResource("/iconos/pdf_filetype_icon_177525.png")));
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+			gl_contentPane.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(lblNombre, GroupLayout.PREFERRED_SIZE, 83, GroupLayout.PREFERRED_SIZE)
-							.addGap(87)
-							.addComponent(textField, GroupLayout.PREFERRED_SIZE, 438, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_contentPane.createSequentialGroup()
 							.addComponent(lblApellidoMaterno, GroupLayout.PREFERRED_SIZE, 166, GroupLayout.PREFERRED_SIZE)
-							.addGap(4)
 							.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, 438, GroupLayout.PREFERRED_SIZE))
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(lblApellidoPaterno, GroupLayout.PREFERRED_SIZE, 166, GroupLayout.PREFERRED_SIZE)
-							.addGap(4)
-							.addComponent(textField_2, GroupLayout.PREFERRED_SIZE, 444, GroupLayout.PREFERRED_SIZE))
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addComponent(lblApellidoPaterno, GroupLayout.PREFERRED_SIZE, 166, GroupLayout.PREFERRED_SIZE)
+									.addGap(4)
+									.addComponent(textField_2, GroupLayout.PREFERRED_SIZE, 444, GroupLayout.PREFERRED_SIZE))
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addGap(22)
+									.addComponent(btnNewButton_3)))
+							.addPreferredGap(ComponentPlacement.RELATED, -400, Short.MAX_VALUE))
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(22)
-							.addComponent(btnNewButton_3)))
-					.addPreferredGap(ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
+							.addComponent(lblNombre, GroupLayout.PREFERRED_SIZE, 83, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED, 131, Short.MAX_VALUE)
+							.addComponent(textField, GroupLayout.PREFERRED_SIZE, 438, GroupLayout.PREFERRED_SIZE)))
+					.addGap(412)
 					.addComponent(table, GroupLayout.PREFERRED_SIZE, 391, GroupLayout.PREFERRED_SIZE)
 					.addGap(23))
 				.addGroup(gl_contentPane.createSequentialGroup()
@@ -123,14 +125,12 @@ public class VistaReportes extends JFrame {
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addContainerGap()
 							.addComponent(toolBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addGap(174)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addGap(3)
-									.addComponent(lblNombre))
+							.addGap(177)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lblNombre)
 								.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-							.addGap(31)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+							.addGap(34)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 								.addComponent(lblApellidoMaterno, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
 								.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 							.addGap(37)
