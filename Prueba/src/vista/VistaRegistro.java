@@ -30,6 +30,8 @@ import modelo.Registro;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.List;
 
 import javax.swing.ButtonGroup;
 import javax.swing.GroupLayout;
@@ -42,12 +44,16 @@ import javax.swing.JCheckBox;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import java.awt.Toolkit;
+import javax.swing.JComboBox;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class VistaRegistro extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable tabla1;
+	private JTable tabla1_1;
 	private JTextField txtBuscar;
 	private TableRowSorter trsfiltro;
 	private String filtro;
@@ -59,14 +65,13 @@ public class VistaRegistro extends JFrame {
 	private JTextField txtNumeroT;
 	private JTextField txtCorreoE;
 	private JTextField txtIdCliente;
-	private ButtonGroup bg=new ButtonGroup();
-	private JRadioButton rdbtnHombre;
-	private JRadioButton rdbtnMujer;
+	private JComboBox<String> comboBoxS;
+	//private ButtonGroup bg=new ButtonGroup();
 	private JDateChooser dcCalendario;
-	private JCheckBox chckbxActivo ;
 	private DefaultTableModel modelo;
 	private TableRowSorter<DefaultTableModel> sorter;
 	private JScrollPane scrollPane ;
+	
 
 	/**
 	 * Launch the application.
@@ -144,35 +149,47 @@ public class VistaRegistro extends JFrame {
 		tabla1 = new JTable();
 		scrollPane.setViewportView(tabla1);
 		tabla1.setBackground(new Color(153, 204, 255));
-		modelo=new DefaultTableModel();
-		Object [] titulos= {"Nombre", "Apellido Paterno", "Apellido Materno", "Sexo", "Fecha Nacimiento", "Direccion", "CURP", "Numero Telefonico","Correo"};
+		modelo=new DefaultTableModel(new String[] {"Id","Nombre", "Apellido Paterno", "Apellido Materno", "Sexo", "Fecha Nacimiento", "Direccion", "CURP", "Numero Telefonico","Correo"}, 0);
+		tabla1_1 =new JTable(modelo);
+		tabla1_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int filas=tabla1.getSelectedRow();
+				if(filas != -1) {
+					txtIdCliente.setText(tabla1.getValueAt(filas, 0).toString());
+					txtNombre.setText(tabla1.getValueAt(filas, 1).toString());
+					txtApellidoP.setText(tabla1.getValueAt(filas, 2).toString());
+					txtApellidoM.setText(tabla1.getValueAt(filas, 3).toString());
+					comboBoxS.setSelectedItem(tabla1.getValueAt(filas, 4).toString());
+					txtDireccion.setText(tabla1.getValueAt(filas, 5).toString());
+					txtCurp.setText(tabla1.getValueAt(filas, 6).toString());
+					txtNumeroT.setText(tabla1.getValueAt(filas, 7).toString());
+					txtCorreoE.setText(tabla1.getValueAt(filas, 8).toString());
+					
+					cargarDatos();
+				}
+				}
+			
+		});
+		
+		scrollPane = new JScrollPane(tabla1_1);
+		//Object [] titulos= ;
 		//Object [] row=new Object[0];
 		
-		modelo.setColumnIdentifiers(titulos);
-		tabla1.setModel(modelo);
+		//modelo.setColumnIdentifiers();
+		//tabla1.setModel(modelo);
 		//tabla1= new JTable(modelo);
-		scrollPane.setViewportView(tabla1);
+		//scrollPane.setViewportView(tabla1);
 		
 		sorter=new TableRowSorter<>(modelo);
-		tabla1.setRowSorter(sorter);
+		tabla1_1.setRowSorter(sorter);
 		
 		JButton btnConsultarPersona = new JButton("Consultar");
 		btnConsultarPersona.setBounds(161, 603, 87, 51);
 		btnConsultarPersona.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				DataRegistro dr=new DataRegistro();
-				Registro regi=dr.consultarRegistro(Integer.parseInt(txtIdCliente.getText()));
-				txtNombre.setText(regi.getNombre());
-				txtApellidoP.setText(regi.getApellidoP());
-				txtApellidoM.setText(regi.getApellidoM());
-				//rdbtnMujer.isSelected(regi.getSexo());
-				//rdbtnHombre.setSelected(regi.getSexo());
-				dcCalendario.setDate(regi.getFechaDeNacimiento());
-				txtCurp.setText(regi.getCurp());
-				txtNumeroT.setText(String.valueOf(regi.getNumeroTelefonico()));
-				txtCorreoE.setText(regi.getCorreoElectronico());
-				txtDireccion.setText(regi.getDireccion());
-				chckbxActivo.setSelected(regi.isActivo());
+				cargarDatos();
+		
 			}
 		});
 		btnConsultarPersona.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -183,6 +200,12 @@ public class VistaRegistro extends JFrame {
 		btnConsultarPersona.setBorder(null);
 		
 		JButton btnEditar = new JButton("Editar");
+		btnEditar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				editarPersona();
+				cargarDatos();
+			}
+		});
 		btnEditar.setBounds(241, 581, 111, 73);
 		btnEditar.setContentAreaFilled(false);
 		btnEditar.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -192,6 +215,12 @@ public class VistaRegistro extends JFrame {
 		btnEditar.setBorder(null);
 		
 		JButton btnEliminarPersona = new JButton("Eliminar");
+		btnEliminarPersona.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				eliminarPersona();
+				cargarDatos();
+			}
+		});
 		btnEliminarPersona.setBounds(355, 593, 70, 61);
 		btnEliminarPersona.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnEliminarPersona.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -206,9 +235,12 @@ public class VistaRegistro extends JFrame {
 		btnGuardar.setBounds(67, 593, 76, 61);
 		btnGuardar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				DataRegistro dr=new DataRegistro();
-				//Registro regi=new Registro();
-				guardar();
+				guardarPersona();
+				cargarDatos();
+				limpiarCampos();
+				
+				
+
 
 			}
 		});
@@ -309,28 +341,14 @@ public class VistaRegistro extends JFrame {
 		JLabel lblImagen = new JLabel("Sexo:");
 		lblImagen.setBounds(33, 546, 60, 14);
 		
-	    rdbtnHombre = new JRadioButton("Hombre");
-	    rdbtnHombre.setBounds(161, 551, 63, 23);
-		
-	    rdbtnMujer = new JRadioButton("Mujer");
-	    rdbtnMujer.setBounds(355, 551, 63, 23);
-		
-		bg.add(rdbtnMujer);
-		bg.add(rdbtnHombre);
-		
 		JLabel lblNewLabel = new JLabel("Id cliente:");
 		lblNewLabel.setBounds(10, 103, 48, 14);
 		
 		txtIdCliente = new JTextField();
 		txtIdCliente.setBounds(180, 98, 438, 20);
 		txtIdCliente.setColumns(10);
-		
-	    chckbxActivo = new JCheckBox("Activo");
-	    chckbxActivo.setBounds(476, 551, 119, 23);
 		contentPane.setLayout(null);
-		contentPane.add(rdbtnHombre);
 		contentPane.add(btnGuardar);
-		contentPane.add(rdbtnMujer);
 		contentPane.add(lblImagen);
 		contentPane.add(btnConsultarPersona);
 		contentPane.add(btnEditar);
@@ -356,7 +374,11 @@ public class VistaRegistro extends JFrame {
 		contentPane.add(scrollPane);
 		contentPane.add(txtBuscar);
 		contentPane.add(lblBuscar);
-		contentPane.add(chckbxActivo);
+		
+		comboBoxS = new JComboBox<>(new String[] {"Masculino", "Femenino"});
+		comboBoxS.setBounds(180, 542, 245, 22);
+		contentPane.add(comboBoxS);
+		this.setExtendedState(Frame.MAXIMIZED_BOTH);
 		
 		JLabel lblNewLabel_1 = new JLabel("");
 		lblNewLabel_1.setBounds(0, 0, 1600, 827);
@@ -364,71 +386,61 @@ public class VistaRegistro extends JFrame {
 		ImageIcon icone=new ImageIcon(getClass().getResource("RegiFondo.jpg"));
 		ImageIcon imgi =new ImageIcon(icone.getImage().getScaledInstance(lblNewLabel_1.getWidth(), lblNewLabel_1.getHeight(), Image.SCALE_SMOOTH));
 		lblNewLabel_1.setIcon(imgi);
-		this.setExtendedState(Frame.MAXIMIZED_BOTH);
+		
 	
-	}
-	private boolean guardar() {
-		boolean guardado = false;
-	    Registro reg = new Registro(
-	        Integer.parseInt(txtIdCliente.getText()),
-	        txtNombre.getText(),
-	        txtApellidoP.getText(),
-	        txtApellidoM.getText(),
-	        rdbtnHombre.isSelected() ? "Hombre" : "Mujer",
-	        dcCalendario.getDate(),
-	        txtCurp.getText(),
-	        Integer.parseInt(txtNumeroT.getText()),
-	        txtCorreoE.getText(),
-	        txtDireccion.getText(),
-	        chckbxActivo.isSelected()
-	    );
-
-	    DataRegistro dr = new DataRegistro();
-	    guardado = dr.guardar(reg);
-
-	    if (guardado) {
-	        // Agregar registro a la JTable
-	        modelo.addRow(new Object[] {
-	            reg.getIdCliente(),
-	            reg.getNombre(),
-	            reg.getApellidoP(),
-	            reg.getApellidoM(),
-	            reg.getSexo(),
-	            reg.getFechaDeNacimiento(),
-	            reg.getCurp(),
-	            reg.getNumeroTelefonico(),
-	            reg.getCorreoElectronico(),
-	            reg.getDireccion(),
-	            reg.isActivo()
-	        });
-	       // modelo.addRow(fila); // Agrega la fila a la tabla
-            limpiarCampos(); // Limpia los campos del formulario
-	    }
-
-	    return guardado;
 	
-		   
-		           
-		           
-		        
-
-	}
+	}	  		  		          		          		   
 
 	private void limpiarCampos() {
 		txtIdCliente.setText("");
 		txtNombre.setText("");
 		txtApellidoM.setText("");
-		
-	    rdbtnHombre.setSelected(false);
-	    rdbtnMujer.setSelected(false);
 	    dcCalendario.setDate(null);
 		txtCurp.setText("");
 		txtNumeroT.setText("");
 		txtCorreoE.setText("");
 		txtDireccion.setText("");
-		chckbxActivo.setSelected(false);
 		
 		
+		
+		
+
 		
 	}
+	private void cargarDatos() {
+		modelo.setRowCount(0);
+		DataRegistro dre=new DataRegistro();
+		List<Object[]> personas= dre.obtenerPersonas();
+		for(Object[] persona : personas) {
+			modelo.addRow(persona);
+		}
+	
+	}
+	
+	private void guardarPersona() {
+        DataRegistro re = new DataRegistro();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String fecha = sdf.format(dcCalendario.getDate());
+        re.guardar(txtIdCliente.getText(), txtNombre.getText(), txtApellidoP.getText(), txtApellidoM.getText(), 
+        		comboBoxS.getSelectedItem().toString(), fecha, txtDireccion.getText(), txtCurp.getText(), 
+            txtNumeroT.getText(), txtCorreoE.getText());
+    }
+
+    private void editarPersona() {
+    	DataRegistro re = new DataRegistro();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String fecha = sdf.format(dcCalendario.getDate());
+        re.editarPersona(txtIdCliente.getText(), txtNombre.getText(), txtApellidoP.getText(), txtApellidoM.getText(), 
+        		comboBoxS.getSelectedItem().toString(), fecha, txtDireccion.getText(), txtCurp.getText(), 
+            txtNumeroT.getText(), txtCorreoE.getText());
+    }
+
+    private void eliminarPersona() {
+    	DataRegistro re = new DataRegistro();
+        re.eliminarPersona(txtIdCliente.getText());
+    }
+
+ 
+
+
 }

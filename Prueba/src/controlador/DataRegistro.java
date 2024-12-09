@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
@@ -15,32 +17,33 @@ public class DataRegistro {
 	private Conxion co=new Conxion();
 	private Connection cone;
 	private PreparedStatement ps;
-
-
-	public boolean guardar(Registro regi) {
+	
+	
+	public boolean guardar(String id_Persona, String nombre, String apellidoPaterno, String apellidoMaterno, 
+            String sexo, String fechaNacimiento, String direccion, String curp, 
+            String telefono, String correo) {
 		boolean guarda=false;
-		cone=co.conectar();
+		String sql="insert into persona (id_registro, nombre, apellido_paterno, apellido_materno, sexo, fecha_nacimiento, direccion, curp, telefono, correo_electronico ) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
+		cone=co.conectar(); 
 		try {
-			ps=cone.prepareStatement("insert into reporte values(?,?,?,?,?,?,?,?,?,?,true)");
-			ps.setInt(1,regi.getIdCliente());
-			ps.setString(2,regi.getNombre());
-			ps.setString(3,regi.getApellidoP());
-			ps.setString(4,regi.getApellidoM());
-			ps.setString(5,regi.getSexo());
-			java.sql.Date sqlDate = new java.sql.Date(regi.getFechaDeNacimiento().getTime());
-			ps.setDate(6, sqlDate);
-			ps.setString(7, regi.getCurp());
-			ps.setInt(8,regi.getNumeroTelefonico());
-			ps.setString(9,regi.getCorreoElectronico());
-			ps.setString(10,regi.getDireccion());
-			//ps.setBoolean(11,regi.getActivo());
-			int filasModificadas=ps.executeUpdate(); 
+			ps=cone.prepareStatement(sql);
+			ps.setString(1, id_Persona);
+			ps.setString(2, nombre);
+            ps.setString(3, apellidoPaterno);
+            ps.setString(4, apellidoMaterno);
+            ps.setString(5, sexo);
+            ps.setString(6, fechaNacimiento);
+            ps.setString(7, direccion);
+            ps.setString(8, curp);
+            ps.setString(9, telefono);
+            ps.setString(10, correo);
+			int filasModificadas=ps.executeUpdate();
 			if(filasModificadas>0) {
 				guarda=true;
-				JOptionPane.showMessageDialog(null,"Datos guardados correctamente");
+				JOptionPane.showMessageDialog(null,"Pago realizado correctamente");
 				
 			}else {
-				JOptionPane.showMessageDialog(null,"Datos no guardados");
+				JOptionPane.showMessageDialog(null,"Pago no realizado correctamente");
 
 				
 			}
@@ -50,121 +53,94 @@ public class DataRegistro {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
-			JOptionPane.showMessageDialog(null,"Error al guardar"+ e);
+			JOptionPane.showMessageDialog(null,"Error al guardar pago"+ e);
 
 		}
 		return guarda;
-		
 	}
-	
-	public Registro consultarRegistro(int idCliente) {
-		Registro reg=new Registro();
-		String sql="select * from reporte where id_Cliente=?";
+	public List<Object[]>obtenerPersonas(){
+		List<Object[]> personas= new ArrayList<>();
 		cone=co.conectar();
-		LocalDate VistaRegistro= null;
+		String sql="select * from persona";
 		try {
 			ps=cone.prepareStatement(sql);
-			ps.setInt(1,idCliente);
 			ResultSet rs=ps.executeQuery();
-			if(rs.next()) {
-				reg.setIdCliente(rs.getInt(1));
-				reg.setNombre(rs.getString(2));
-				reg.setApellidoP(rs.getString(3));
-				reg.setApellidoM(rs.getString(4));
-				reg.setSexo(rs.getString(5));
-				VistaRegistro=rs.getDate(6).toLocalDate();
-				reg.setCurp(rs.getString(7));
-				reg.setNumeroTelefonico(rs.getInt(8));
-				reg.setCorreoElectronico(rs.getString(9));
-				reg.setDireccion(rs.getString(10));
-				reg.setActivo(rs.getBoolean(11));
+			 while(rs.next()) {
+				 personas.add(new Object[] {
+		                    rs.getString("id_personal"),
+		                    rs.getString("nombre"),
+		                    rs.getString("apellido_paterno"),
+		                    rs.getString("apellido_materno"),
+		                    rs.getString("sexo"),
+		                    rs.getDate("fecha_nacimiento").toString(),
+		                    rs.getString("direccion"),
+		                    rs.getString("curp"),
+		                    rs.getString("telefono"),
+		                    rs.getString("correo_electronico")
+		                });
 				
-				
-			}else {
-				JOptionPane.showMessageDialog(null,"No se encontraron los datos");
 			}
-			ps.close();
-			cone.close();
-			rs.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
-			JOptionPane.showMessageDialog(null,"Error al consultar los datos"+e);
-
-			
+			JOptionPane.showMessageDialog(null,"Error al obtener los pagos"+ e);
 		}
-		return reg;
-	}
-	public boolean actualizar(Registro regi) {
-		boolean actuali=false;
-		cone=co.conectar();
-		try {
-			ps=cone.prepareStatement("update reporte set nombre=?,apellidoPaterno=?,apellidoMaterno=?,sexo=?,fechaDeNacimiento=?,direccion=?,curp=?,numeroTelefonico=?,correo=?,activo=true where id_Cliente=?");
-			ps.setInt(1,regi.getIdCliente());
-			ps.setString(2,regi.getNombre());
-			ps.setString(3,regi.getApellidoP());
-			ps.setString(4,regi.getApellidoM());
-			ps.setString(5,regi.getSexo());
-			java.sql.Date sqlDate = new java.sql.Date(regi.getFechaDeNacimiento().getTime());
-			ps.setDate(6, sqlDate);
-			ps.setString(7, regi.getCurp());
-			ps.setInt(8,regi.getNumeroTelefonico());
-			ps.setString(9,regi.getCorreoElectronico());
-			ps.setString(10,regi.getDireccion());
-			ps.setBoolean(11,regi.isActivo());
-			int filasModificadas=ps.executeUpdate();
-			if(filasModificadas>0) {
-				actuali=true;
-				JOptionPane.showMessageDialog(null,"Datos actualizados correctamente");
-				
-			}else {
-				JOptionPane.showMessageDialog(null,"Datos no actualizados");
-
-				
-			}
-			ps.close();
-			cone.close();
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
-			JOptionPane.showMessageDialog(null,"Error al actualizar"+ e);
-
-		}
-		return actuali;
 		
+		return personas;
 	}
 	
-	public boolean eliminar(int id_Cliente) {
-		boolean elimina=false;
-		cone=co.conectar();
-		try {
-			ps=cone.prepareStatement("update registro set activo=false where id_Cliente=?");
-			ps.setInt(1, id_Cliente);
-			int filasModificadas=ps.executeUpdate();
-			if(filasModificadas>0) {
-				elimina=true;
-				JOptionPane.showMessageDialog(null,"Datos eliminados correctamente");
-				
-			}else {
-				JOptionPane.showMessageDialog(null,"Datos no eliminados");
-
-				
-			}
-			ps.close();
-			cone.close();
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
-			JOptionPane.showMessageDialog(null,"Error al eliminar"+ e);
-
-		}
-		return elimina;
 		
+	
+
+public boolean eliminarPersona(String idPersona) {
+	//boolean elimi=false;
+	String sql="delete from persona where id_registro=?";
+	cone=co.conectar();
+	try {
+		ps=cone.prepareStatement(sql);
+		ps.setString(1, idPersona);
+		ps.executeUpdate(); 
+		return true;
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		//e.printStackTrace();
+		JOptionPane.showMessageDialog(null,"Error al Eliminar el pago"+ e);
+		return false;
+
 	}
 	
 	
-
-
+	
+	
 }
+public boolean editarPersona(String id_Persona, String nombre, String apellidoPaterno, String apellidoMaterno, 
+        String sexo, String fechaNacimiento, String direccion, String curp, 
+        String telefono, String correo) {
+	
+	String sql="update persona set nombre = ?, apellido_paterno = ?, apellido_materno = ?, sexo = ?, fecha_nacimiento = ?, direccion = ?, curp = ?, telefono = ?, correo_electronico = ? WHERE id_registro = ?";
+	cone=co.conectar();
+	try {
+		ps=cone.prepareStatement(sql);
+		  ps.setString(1, nombre);
+          ps.setString(2, apellidoPaterno);
+          ps.setString(3, apellidoMaterno);
+          ps.setString(4, sexo);
+          ps.setString(5, fechaNacimiento);
+          ps.setString(6, direccion);
+          ps.setString(7, curp);
+          ps.setString(8, telefono);
+          ps.setString(9, correo);
+          ps.setString(10, id_Persona);
+          ps.executeUpdate();
+		return true;
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		//e.printStackTrace();
+		JOptionPane.showMessageDialog(null,"Error al Editar el pago"+ e);
+		return false;
+
+	}
+	
+}
+}
+

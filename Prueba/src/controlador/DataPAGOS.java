@@ -102,8 +102,9 @@ public boolean eliminarPago(String id) {
 	
 }
 public boolean editarPago( String id_Pago, int pagoPendiente, double saldoAPagar,String fechaLimite) {
-	cone=co.conectar();
+	
 	String sql="update pagos1 set pagoPendiente=?, saldoAPagar=?, fechaLimite=? where id_Pago=?";
+	cone=co.conectar();
 	try {
 		ps=cone.prepareStatement(sql);
 		ps.setInt(1, pagoPendiente);

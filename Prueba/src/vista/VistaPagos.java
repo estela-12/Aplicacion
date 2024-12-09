@@ -275,23 +275,12 @@ public class VistaPagos extends JFrame {
 		JOptionPane.showMessageDialog(this, "No se pudo registrar el pago");
 	}
 	}
-	private void cargarDatos() {
-		modelo.setRowCount(0);
-		DataPAGOS dp=new DataPAGOS();
-		List<Object[]> pagos=dp.obtenerPagos();
-		for(Object[] pago : pagos) {
-			modelo.addRow(pago);
-		}
-}
-	private void limpiar() {
-		txtIdPago.setText("");
-		txtPagosPen.setText("");
-		txtSaldoAPagar.setText("");
-		txtFechaLim.setText("");
-	}
+
 	private void editarPago() {
 		DataPAGOS dpa=new DataPAGOS();
 		dpa.editarPago(txtIdPago.getText(), Integer.parseInt(txtPagosPen.getText()), Double.parseDouble(txtSaldoAPagar.getText()), txtFechaLim.getText());
+		guardarPago();
+		eliminarPago();
 		limpiar();
 
 	
@@ -308,6 +297,20 @@ public class VistaPagos extends JFrame {
 
 		}
 		
+	}
+	private void cargarDatos() {
+		modelo.setRowCount(0);
+		DataPAGOS dp=new DataPAGOS();
+		List<Object[]> pagos=dp.obtenerPagos();
+		for(Object[] pago : pagos) {
+			modelo.addRow(pago);
+		}
+}
+	private void limpiar() {
+		txtIdPago.setText("");
+		txtPagosPen.setText("");
+		txtSaldoAPagar.setText("");
+		txtFechaLim.setText("");
 	}
 
 }
