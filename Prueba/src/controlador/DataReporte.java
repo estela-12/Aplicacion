@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
@@ -16,35 +18,32 @@ public class DataReporte {
 
 	private Connection cone;
 	private PreparedStatement ps;
-
 	
-	public boolean guardar(Reporte repo) {
+	public boolean guardar(String id_Reporte,String fechaLevantamiento, String fechaCorte ,String descripcion) {
 		boolean guarda=false;
+		String sql="insert into reportes(id_Reporte,fecha_Levantamiento, fecha_Corte, descripsion ) values(?,?,?,?) ";
 		cone=co.conectar(); 
 		try {
-			ps=cone.prepareStatement("insert into reporte2 values(?,?,?,?)");
-			ps.setInt(1,repo.getIdReporte());
-			//java.sql.Date sqlDate = new java.sql.Date(repo.getFechaDelLevantamientoDelReporte().getTime());
-			ps.setDate(2, repo.getFechaDelLevantamientoDelReporte());
-			//java.sql.Date sqlDate1 = new java.sql.Date(repo.getFechaDelCorteDeAgua().getTime());
-			ps.setDate(3, repo.getFechaDelCorteDeAgua());
-			//ps.setString(4,repo.getDireccion());
-			//ps.setInt(5,repo.getNumeroTelefonico());
-			ps.setString(4,repo.getDescripcionDelReporte());
-
-
+			ps=cone.prepareStatement(sql);
+			ps.setString(1, id_Reporte);
+			ps.setString(2, fechaLevantamiento);
+			ps.setString(3, fechaCorte);
+			ps.setString(4, descripcion);
+			//java.sql.Date sqlDate = new java.sql.Date(pag.getFechaLimiteaPagar().getTime());
+			//ps.setString(4, fechaLimite);
 			int filasModificadas=ps.executeUpdate();
 			if(filasModificadas>0) {
 				guarda=true;
-				JOptionPane.showMessageDialog(null,"Reporte guardado correctamente");
+				JOptionPane.showMessageDialog(null,"Reporte realizado correctamente");
 				
 			}else {
-				JOptionPane.showMessageDialog(null,"Reporte no guardado");
+				JOptionPane.showMessageDialog(null,"Reporte no realizado correctamente");
 
 				
 			}
 			ps.close();
 			cone.close();
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
@@ -53,107 +52,82 @@ public class DataReporte {
 		}
 		return guarda;
 	}
-	public Reporte consultarReporte(int idReporte) {
-		Reporte rep=new Reporte();
-		String sql="select * from reportes2 where id_rep=?";
+	public List<Object[]>obtenerReporte(){
+		List<Object[]> reporte= new ArrayList<>();
 		cone=co.conectar();
-		LocalDate VistaReportes= null;
+		String sql="select * from reportes";
 		try {
 			ps=cone.prepareStatement(sql);
-			ps.setInt(1,idReporte);
 			ResultSet rs=ps.executeQuery();
-			if(rs.next()) {
-				rep.setIdReporte(rs.getInt(1));
+			 while(rs.next()) {
+				Object[] repo=new Object[4];
+				repo[0]=rs.getString("id_Reporte");
+				repo[1]=rs.getDate("fecha_Levantamiento").toString();
+				repo[2]=rs.getDate("fecha_Corte").toString();
+				repo[3]=rs.getString("descripsion");
+				reporte.add(repo);
 				
-				VistaReportes=rs.getDate(2).toLocalDate();
-				VistaReportes=rs.getDate(3).toLocalDate();
-				//rep.setDireccion(rs.getString(4));
-				//rep.setNumeroTelefonico(rs.getInt(5));
-				rep.setDescripcionDelReporte(rs.getString(4));
-				
-				
-			}else {
-				JOptionPane.showMessageDialog(null,"No se encontro el reporte");
 			}
-			ps.close();
-			cone.close();
-			rs.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
-			JOptionPane.showMessageDialog(null,"Error al consultar los datos"+e);
-
-			
+			JOptionPane.showMessageDialog(null,"Error al obtener los reporte"+ e);
 		}
-		return rep;
+		
+		return reporte;
 	}
 	
-	public boolean actualizar(Reporte repo) {
-		boolean actuali=false;
-		cone=co.conectar();
-		try {
-			ps=cone.prepareStatement("update reportes2 set fechaDelLevantamiento=?,fechaDelCorte=?,descripcion=? where idReporte=?");
-			ps.setInt(1,repo.getIdReporte());
-			java.sql.Date sqlDate = new java.sql.Date(repo.getFechaDelLevantamientoDelReporte().getTime());
-			ps.setDate(2, sqlDate);
-			java.sql.Date sqlDate1 = new java.sql.Date(repo.getFechaDelCorteDeAgua().getTime());
-			ps.setDate(3, sqlDate1);
-			//ps.setString(4, repo.getDireccion());
-			//ps.setInt(5,repo.getNumeroTelefonico());
-			ps.setString(4,repo.getDescripcionDelReporte());
-			int filasModificadas=ps.executeUpdate();
-			if(filasModificadas>0) {
-				actuali=true;
-				JOptionPane.showMessageDialog(null,"Datos actualizados correctamente");
-				
-			}else {
-				JOptionPane.showMessageDialog(null,"Datos no actualizados");
-
-				
-			}
-			ps.close();
-			cone.close();
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
-			JOptionPane.showMessageDialog(null,"Error al actualizar"+ e);
-
-		}
-		return actuali;
 		
-	}
-	public boolean eliminar(int idReporte) {
-		boolean elimina=false;
-		cone=co.conectar();
-		try {
-			ps=cone.prepareStatement("update reportes2 set where idReportes=?");
-			ps.setInt(1, idReporte);
-			int filasModificadas=ps.executeUpdate();
-			if(filasModificadas>0) {
-				JOptionPane.showMessageDialog(null,"Datos Eliminados Correctamente");
-				
-			}else {
-				JOptionPane.showMessageDialog(null,"Datos no Eliminados");
+	
 
-				
-			}
-			ps.close();
-			cone.close();
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
-			JOptionPane.showMessageDialog(null,"Error al eliminar"+ e);
-
-		}
-		return elimina;
-		
-	}
-	public static boolean guardar(DataReporte reporte) {
-		// TODO Auto-generated method stub
+public boolean eliminarReporte(String id) {
+	//boolean elimi=false;
+	String sql="delete from reportes where id_Reporte=?";
+	cone=co.conectar();
+	try {
+		ps=cone.prepareStatement(sql);
+		ps.setString(1, id);
+		ps.executeUpdate(); 
+		return true;
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		//e.printStackTrace();
+		JOptionPane.showMessageDialog(null,"Error al Eliminar el reporte"+ e);
 		return false;
+
 	}
 	
-
+	
+	
+	
 }
+public boolean editarReporte( String id_Reporte,String fechaLevantamiento, String fechaCorte ,String descripcion) {
+	
+	String sql="update reportes set fecha_Levantamiento=?, fecha_Corte=?, descripsion=? where id_Reporte=?";
+	cone=co.conectar();
+	try {
+		ps=cone.prepareStatement(sql);
+		ps.setString(1, fechaLevantamiento);
+		ps.setString(2, fechaCorte);
+		ps.setString(3, descripcion);
+		ps.setString(4, id_Reporte);
+
+		ps.executeUpdate();
+		return true;
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		//e.printStackTrace();
+		JOptionPane.showMessageDialog(null,"Error al Editar el reporte"+ e);
+		return false;
+
+	}
+	
+	
+}
+}
+
+	
+
+	
+
+

@@ -11,7 +11,7 @@ public class DataUsuarios {
 	private PreparedStatement ps;
 	public  boolean validarUsuario(User us) {
         boolean esValido = false;
-        String query = "SELECT * FROM usuarios1 WHERE usuario = ? and contrasena = ?";
+        String query = "SELECT * FROM usuarios WHERE usuario = ? and contrasena = ?";
         cone=co.conectar();
         try {
         	ps=cone.prepareStatement(query);
@@ -57,7 +57,7 @@ public class DataUsuarios {
 	}*/
 	 public  boolean existeUsuario(User us) {
 	 boolean existe = false;
-     String query = "SELECT * FROM usuarios1 WHERE usuario = ?";
+     String query = "SELECT * FROM usuarios WHERE usuario = ?";
      cone=co.conectar();
      try {
      	ps=cone.prepareStatement(query);
@@ -82,7 +82,7 @@ public class DataUsuarios {
 }
 	 public boolean registrarUsuario(User us, String role) {
 		    boolean registrado = false;
-		    String query = "INSERT INTO usuarios1 (usuario, contrasena) VALUES (?, ?)";
+		    String query = "INSERT INTO usuarios (usuario, contrasena) VALUES (?, ?)";
 		    cone = co.conectar();
 
 		    try {

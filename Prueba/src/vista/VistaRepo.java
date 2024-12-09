@@ -5,6 +5,8 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
 import java.awt.Toolkit;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -17,18 +19,21 @@ import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.Image;
 
 import javax.swing.JScrollPane;
 import com.toedter.calendar.JDateChooser;
 
 import controlador.Conxion;
+import controlador.DataPAGOS;
 import controlador.DataReporte;
 import modelo.Reporte;
 
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.util.List;
 import java.awt.event.ActionEvent;
 
 public class VistaRepo extends JFrame {
@@ -39,8 +44,9 @@ public class VistaRepo extends JFrame {
 	private JTable table;
 	private JTextField txtDescripcion;
 	private JTextField txtIdR;
-	private JDateChooser dcLevantami;
-	private JDateChooser dcCorteA;
+	private JTextField txtFechaL;
+	private JTextField txtFechaC;
+	private DefaultTableModel modelo;
 
 	/**
 	 * Launch the application.
@@ -120,7 +126,8 @@ public class VistaRepo extends JFrame {
 		JButton btnGuardar = new JButton("Guardar");
 		btnGuardar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				guardar();
+				guardarReporte();
+				cargarDatos();
 				limpiar();
 			}
 		});
@@ -133,6 +140,11 @@ public class VistaRepo extends JFrame {
 		contentPane.add(btnGuardar);
 		
 		JButton btnConsultarPersona = new JButton("Consultar");
+		btnConsultarPersona.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cargarDatos();
+			}
+		});
 		btnConsultarPersona.setVerticalTextPosition(SwingConstants.BOTTOM);
 		btnConsultarPersona.setVerticalAlignment(SwingConstants.BOTTOM);
 		btnConsultarPersona.setIcon(new ImageIcon(VistaRepo.class.getResource("/iconos/3709746-customer-evaluation-review-satisfaction-system_108070.png")));
@@ -143,6 +155,13 @@ public class VistaRepo extends JFrame {
 		contentPane.add(btnConsultarPersona);
 		
 		JButton btnEditar = new JButton("Editar");
+		btnEditar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				editarReporte();
+				cargarDatos();
+				limpiar();
+			}
+		});
 		btnEditar.setVerticalTextPosition(SwingConstants.BOTTOM);
 		btnEditar.setVerticalAlignment(SwingConstants.BOTTOM);
 		btnEditar.setIcon(new ImageIcon(VistaRepo.class.getResource("/iconos/UserEdit_40958.png")));
@@ -153,6 +172,11 @@ public class VistaRepo extends JFrame {
 		contentPane.add(btnEditar);
 		
 		JButton btnEliminarPersona = new JButton("Eliminar");
+		btnEliminarPersona.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				eliminarReporte();
+			}
+		});
 		btnEliminarPersona.setVerticalTextPosition(SwingConstants.BOTTOM);
 		btnEliminarPersona.setVerticalAlignment(SwingConstants.BOTTOM);
 		btnEliminarPersona.setIcon(new ImageIcon(VistaRepo.class.getResource("/iconos/seo-social-web-network-internet_262_icon-icons.com_61518.png")));
@@ -192,14 +216,15 @@ public class VistaRepo extends JFrame {
 		txtIdR.setBounds(195, 236, 374, 20);
 		contentPane.add(txtIdR);
 		
-		dcLevantami = new JDateChooser();
-		dcLevantami.setDateFormatString("dd-MM-yyyy");
-		dcLevantami.setBounds(195, 292, 374, 20);
-		contentPane.add(dcLevantami);
+		txtFechaL = new JTextField();
+		txtFechaL.setColumns(10);
+		txtFechaL.setBounds(195, 292, 374, 20);
+		contentPane.add(txtFechaL);
 		
-		dcCorteA = new JDateChooser();
-		dcCorteA.setBounds(195, 339, 374, 20);
-		contentPane.add(dcCorteA);
+		txtFechaC = new JTextField();
+		txtFechaC.setColumns(10);
+		txtFechaC.setBounds(195, 339, 374, 20);
+		contentPane.add(txtFechaC);
 		
 		JLabel lblImagenF = new JLabel("");
 		lblImagenF.setBounds(0, 0, 1244, 713);
@@ -207,50 +232,67 @@ public class VistaRepo extends JFrame {
 		ImageIcon imgi =new ImageIcon(icone.getImage().getScaledInstance(lblImagenF.getWidth(), lblImagenF.getHeight(), Image.SCALE_SMOOTH));
 		lblImagenF.setIcon(imgi);
 		contentPane.add(lblImagenF);
+		this.setExtendedState(Frame.MAXIMIZED_BOTH);
+		
+
 	}
-	private  void guardar()  {
-		
-		String idRepo= txtIdR.getText();
+	private void guardarReporte() {
+		String id_Reporte=txtIdR.getText();
+		String fechaLevantamiento=txtFechaL.getText();
+		String fechaCorte=txtFechaC.getText();
 		String descripsion=txtDescripcion.getText();
-		java.util.Date fechaL=dcLevantami.getDate();
-		java.util.Date fechaC=dcCorteA.getDate();
-		
-		if(idRepo.isEmpty() || descripsion.isEmpty() || fechaL==null || fechaC==null) {
-			JOptionPane.showMessageDialog(null, "Por favor, completa todos los campos"); 
+		try {
+
+		}catch(NumberFormatException e) {
 			return;
+		}
+	
+	DataReporte dp= new DataReporte();
+	boolean re=dp.guardar( id_Reporte,  fechaLevantamiento,  fechaCorte, descripsion);
+	if(re) {
+		JOptionPane.showMessageDialog(this, "Reporte registrado correctamente");
+		limpiar();
+	}else {
+		JOptionPane.showMessageDialog(this, "No se pudo registrar el Reporte");
+	}
+	}
+
+	private void editarReporte() {
+		DataReporte dp= new DataReporte();
+		dp.editarReporte(txtIdR.getText(), txtFechaL.getText(), txtFechaC.getText(),txtDescripcion.getText());
+		guardarReporte();
+		eliminarReporte();
+		limpiar();
+
+	
+		}
+	
+	private void eliminarReporte() {
+		int filas=table.getSelectedRow();
+		if(filas !=-1) {
+			String id=(String) table.getValueAt(filas, 0);
+			DataReporte dp= new DataReporte();
+			dp.eliminarReporte(id);
+			cargarDatos();
+			limpiar();
 
 		}
 		
-		
-		try {
-			int idRepoI = Integer.parseInt(idRepo);
-			java.sql.Date fechaLe= new java.sql.Date(fechaL.getTime());
-			java.sql.Date fechaCo= new java.sql.Date(fechaC.getTime());
-			   Reporte reporte = new Reporte(idRepoI, fechaCo, fechaLe, descripsion);	        
-	        
-	        boolean exito = DataReporte.guardar(reporte);
-	        
-	        if (exito) {
-                JOptionPane.showMessageDialog(null, "Reporte guardado con éxito");
-            } else {
-                JOptionPane.showMessageDialog(null, "No se pudo guardar el reporte");
-            }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "El ID debe ser un número válido");
-            e.printStackTrace();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Ocurrió un error al guardar el reporte");
-            e.printStackTrace();
-        }
-    }
+	}
+	private void cargarDatos() {
+		modelo.setRowCount(0);
+		DataReporte dp= new DataReporte();
+		List<Object[]> pagos=dp.obtenerReporte();
+		for(Object[] pago : pagos) {
+			modelo.addRow(pago);
+		}
+}
 	private void limpiar() {
 		txtIdR.setText("");
+		txtFechaL.setText("");
+		txtFechaC.setText("");
 		txtDescripcion.setText("");
-		dcLevantami.setDate(null);
-		dcCorteA.setDate(null);
-		
 	}
-
 }
 
 
