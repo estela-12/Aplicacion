@@ -19,7 +19,7 @@ public class DataRegistro {
 	private PreparedStatement ps;
 	
 	
-	public boolean guardar(String id_Persona, String nombre, String apellidoPaterno, String apellidoMaterno, 
+	public boolean guardar(String id_Registro, String nombre, String apellidoPaterno, String apellidoMaterno, 
             String sexo, String fechaNacimiento, String direccion, String curp, 
             String telefono, String correo) {
 		boolean guarda=false;
@@ -27,7 +27,7 @@ public class DataRegistro {
 		cone=co.conectar(); 
 		try {
 			ps=cone.prepareStatement(sql);
-			ps.setString(1, id_Persona);
+			ps.setString(1, id_Registro);
 			ps.setString(2, nombre);
             ps.setString(3, apellidoPaterno);
             ps.setString(4, apellidoMaterno);
@@ -67,7 +67,7 @@ public class DataRegistro {
 			ResultSet rs=ps.executeQuery();
 			 while(rs.next()) {
 				 personas.add(new Object[] {
-		                    rs.getString("id_personal"),
+		                    rs.getString("id_registro"),
 		                    rs.getString("nombre"),
 		                    rs.getString("apellido_paterno"),
 		                    rs.getString("apellido_materno"),

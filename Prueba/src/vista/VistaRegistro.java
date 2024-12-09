@@ -52,8 +52,7 @@ public class VistaRegistro extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTable tabla1;
-	private JTable tabla1_1;
+	//private JTable tabla;
 	private JTextField txtBuscar;
 	private TableRowSorter trsfiltro;
 	private String filtro;
@@ -71,6 +70,7 @@ public class VistaRegistro extends JFrame {
 	private DefaultTableModel modelo;
 	private TableRowSorter<DefaultTableModel> sorter;
 	private JScrollPane scrollPane ;
+	private JTable tabla1;
 	
 
 	/**
@@ -146,43 +146,17 @@ public class VistaRegistro extends JFrame {
 		scrollPane.setBounds(630, 102, 929, 423);
 		scrollPane.setBackground(new Color(153, 204, 255));
 		
-		tabla1 = new JTable();
-		scrollPane.setViewportView(tabla1);
-		tabla1.setBackground(new Color(153, 204, 255));
-		modelo=new DefaultTableModel(new String[] {"Id","Nombre", "Apellido Paterno", "Apellido Materno", "Sexo", "Fecha Nacimiento", "Direccion", "CURP", "Numero Telefonico","Correo"}, 0);
-		tabla1_1 =new JTable(modelo);
-		tabla1_1.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				int filas=tabla1.getSelectedRow();
-				if(filas != -1) {
-					txtIdCliente.setText(tabla1.getValueAt(filas, 0).toString());
-					txtNombre.setText(tabla1.getValueAt(filas, 1).toString());
-					txtApellidoP.setText(tabla1.getValueAt(filas, 2).toString());
-					txtApellidoM.setText(tabla1.getValueAt(filas, 3).toString());
-					comboBoxS.setSelectedItem(tabla1.getValueAt(filas, 4).toString());
-					txtDireccion.setText(tabla1.getValueAt(filas, 5).toString());
-					txtCurp.setText(tabla1.getValueAt(filas, 6).toString());
-					txtNumeroT.setText(tabla1.getValueAt(filas, 7).toString());
-					txtCorreoE.setText(tabla1.getValueAt(filas, 8).toString());
-					
-					cargarDatos();
-				}
-				}
-			
-		});
+		//tabla1 = new JTable();
+		//scrollPane.setViewportView(tabla1);
+		//tabla1.setBackground(new Color(153, 204, 255));
 		
-		scrollPane = new JScrollPane(tabla1_1);
 		//Object [] titulos= ;
 		//Object [] row=new Object[0];
 		
 		//modelo.setColumnIdentifiers();
 		//tabla1.setModel(modelo);
-		//tabla1= new JTable(modelo);
-		//scrollPane.setViewportView(tabla1);
 		
 		sorter=new TableRowSorter<>(modelo);
-		tabla1_1.setRowSorter(sorter);
 		
 		JButton btnConsultarPersona = new JButton("Consultar");
 		btnConsultarPersona.setBounds(161, 603, 87, 51);
@@ -253,18 +227,24 @@ public class VistaRegistro extends JFrame {
 		txtBuscar = new JTextField();
 		txtBuscar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String filtro=txtBuscar.getText().trim();
-				if(filtro.isEmpty()) {
-					sorter.setRowFilter(null);
-				}else {
-					sorter.setRowFilter(RowFilter.regexFilter("(?i)" + filtro));
-				}
+				
 				
 			}
 		});
 		txtBuscar.setBounds(723, 45, 660, 20);
 		txtBuscar.addKeyListener(new KeyAdapter() {
 			
+			@Override
+			public void keyReleased(KeyEvent e) {
+				String filtro=txtBuscar.getText().trim();
+				
+				
+					//sorter.setRowFilter(null);
+				
+					sorter.setRowFilter(RowFilter.regexFilter("(?i)" + filtro));
+				
+				
+			}
 		});
 	
 		txtBuscar.setHorizontalAlignment(SwingConstants.CENTER);
@@ -371,7 +351,6 @@ public class VistaRegistro extends JFrame {
 		contentPane.add(lblNewLabel);
 		contentPane.add(txtIdCliente);
 		contentPane.add(txtNombre);
-		contentPane.add(scrollPane);
 		contentPane.add(txtBuscar);
 		contentPane.add(lblBuscar);
 		
@@ -379,13 +358,45 @@ public class VistaRegistro extends JFrame {
 		comboBoxS.setBounds(180, 542, 245, 22);
 		contentPane.add(comboBoxS);
 		this.setExtendedState(Frame.MAXIMIZED_BOTH);
+		//ImageIcon icone=new ImageIcon(getClass().getResource(""));
 		
-		JLabel lblNewLabel_1 = new JLabel("");
-		lblNewLabel_1.setBounds(0, 0, 1600, 827);
-		contentPane.add(lblNewLabel_1);
-		ImageIcon icone=new ImageIcon(getClass().getResource("RegiFondo.jpg"));
-		ImageIcon imgi =new ImageIcon(icone.getImage().getScaledInstance(lblNewLabel_1.getWidth(), lblNewLabel_1.getHeight(), Image.SCALE_SMOOTH));
-		lblNewLabel_1.setIcon(imgi);
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(645, 101, 921, 533);
+		contentPane.add(scrollPane_1);
+		
+		modelo=new DefaultTableModel(new String[] {"Id","Nombre", "Apellido Paterno", "Apellido Materno", "Sexo", "Fecha Nacimiento", "Direccion", "CURP", "Numero Telefonico","Correo"}, 0);
+
+		tabla1 = new JTable(modelo);
+		tabla1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int filas=tabla1.getSelectedRow();
+				if(filas != -1) {
+					txtIdCliente.setText(tabla1.getValueAt(filas, 0).toString());
+					txtNombre.setText(tabla1.getValueAt(filas, 1).toString());
+					txtApellidoP.setText(tabla1.getValueAt(filas, 2).toString());
+					txtApellidoM.setText(tabla1.getValueAt(filas, 3).toString());
+					comboBoxS.setSelectedItem(tabla1.getValueAt(filas, 4).toString());
+                    dcCalendario.setDate(java.sql.Date.valueOf(tabla1.getValueAt(filas, 5).toString()));
+                    txtDireccion.setText(tabla1.getValueAt(filas, 6).toString());
+                    txtCurp.setText(tabla1.getValueAt(filas, 7).toString());
+                    txtNumeroT.setText(tabla1.getValueAt(filas, 8).toString());
+                    txtCorreoE.setText(tabla1.getValueAt(filas, 9).toString());
+				}
+			
+			}
+		});
+		
+		scrollPane_1.setViewportView(tabla1);
+		cargarDatos();
+		
+		JLabel lblImagen1 = new JLabel("");
+		lblImagen1.setBounds(0, 0, 1600, 827);
+		ImageIcon icon=new ImageIcon(getClass().getResource("RegiFondo.jpg"));
+		ImageIcon imgi =new ImageIcon(icon.getImage().getScaledInstance(lblImagen1.getWidth(), lblImagen1.getHeight(), Image.SCALE_SMOOTH));
+		lblImagen1.setIcon(imgi);
+		contentPane.add(lblImagen1);
+		
 		
 	
 	
@@ -394,6 +405,7 @@ public class VistaRegistro extends JFrame {
 	private void limpiarCampos() {
 		txtIdCliente.setText("");
 		txtNombre.setText("");
+		txtApellidoP.setText("");
 		txtApellidoM.setText("");
 	    dcCalendario.setDate(null);
 		txtCurp.setText("");
@@ -419,7 +431,7 @@ public class VistaRegistro extends JFrame {
 	
 	private void guardarPersona() {
         DataRegistro re = new DataRegistro();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         String fecha = sdf.format(dcCalendario.getDate());
         re.guardar(txtIdCliente.getText(), txtNombre.getText(), txtApellidoP.getText(), txtApellidoM.getText(), 
         		comboBoxS.getSelectedItem().toString(), fecha, txtDireccion.getText(), txtCurp.getText(), 
@@ -428,7 +440,7 @@ public class VistaRegistro extends JFrame {
 
     private void editarPersona() {
     	DataRegistro re = new DataRegistro();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         String fecha = sdf.format(dcCalendario.getDate());
         re.editarPersona(txtIdCliente.getText(), txtNombre.getText(), txtApellidoP.getText(), txtApellidoM.getText(), 
         		comboBoxS.getSelectedItem().toString(), fecha, txtDireccion.getText(), txtCurp.getText(), 
@@ -439,8 +451,4 @@ public class VistaRegistro extends JFrame {
     	DataRegistro re = new DataRegistro();
         re.eliminarPersona(txtIdCliente.getText());
     }
-
- 
-
-
 }
