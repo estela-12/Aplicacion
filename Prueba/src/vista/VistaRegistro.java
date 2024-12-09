@@ -29,6 +29,7 @@ import modelo.Registro;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.sql.Date;
 
 import javax.swing.ButtonGroup;
 import javax.swing.GroupLayout;
@@ -40,6 +41,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JCheckBox;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import java.awt.Toolkit;
 
 public class VistaRegistro extends JFrame {
 
@@ -86,8 +88,10 @@ public class VistaRegistro extends JFrame {
 	 * Create the frame.
 	 */
 	public VistaRegistro() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(VistaRegistro.class.getResource("/iconos/WhatsApp Image 2024-11-29 at 14.20.07.jpeg")));
+		setTitle("Registro Clientes");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1472, 1029);
+		setBounds(100, 100, 1616, 1025);
 		
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setBackground(new Color(4, 173, 255));
@@ -134,7 +138,7 @@ public class VistaRegistro extends JFrame {
 		setContentPane(contentPane);
 		
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(688, 248, 1091, 423);
+		scrollPane.setBounds(630, 102, 929, 423);
 		scrollPane.setBackground(new Color(153, 204, 255));
 		
 		tabla1 = new JTable();
@@ -142,15 +146,18 @@ public class VistaRegistro extends JFrame {
 		tabla1.setBackground(new Color(153, 204, 255));
 		modelo=new DefaultTableModel();
 		Object [] titulos= {"Nombre", "Apellido Paterno", "Apellido Materno", "Sexo", "Fecha Nacimiento", "Direccion", "CURP", "Numero Telefonico","Correo"};
+		//Object [] row=new Object[0];
+		
 		modelo.setColumnIdentifiers(titulos);
-		tabla1= new JTable(modelo);
+		tabla1.setModel(modelo);
+		//tabla1= new JTable(modelo);
 		scrollPane.setViewportView(tabla1);
 		
 		sorter=new TableRowSorter<>(modelo);
 		tabla1.setRowSorter(sorter);
 		
 		JButton btnConsultarPersona = new JButton("Consultar");
-		btnConsultarPersona.setBounds(284, 678, 87, 233);
+		btnConsultarPersona.setBounds(161, 603, 87, 51);
 		btnConsultarPersona.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DataRegistro dr=new DataRegistro();
@@ -158,14 +165,14 @@ public class VistaRegistro extends JFrame {
 				txtNombre.setText(regi.getNombre());
 				txtApellidoP.setText(regi.getApellidoP());
 				txtApellidoM.setText(regi.getApellidoM());
-				rdbtnMujer.setSelected(regi.getSexo());
-				rdbtnHombre.setSelected(regi.getSexo());
+				//rdbtnMujer.isSelected(regi.getSexo());
+				//rdbtnHombre.setSelected(regi.getSexo());
 				dcCalendario.setDate(regi.getFechaDeNacimiento());
 				txtCurp.setText(regi.getCurp());
 				txtNumeroT.setText(String.valueOf(regi.getNumeroTelefonico()));
 				txtCorreoE.setText(regi.getCorreoElectronico());
 				txtDireccion.setText(regi.getDireccion());
-				chckbxActivo.setSelected(regi.getActivo());
+				chckbxActivo.setSelected(regi.isActivo());
 			}
 		});
 		btnConsultarPersona.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -176,7 +183,7 @@ public class VistaRegistro extends JFrame {
 		btnConsultarPersona.setBorder(null);
 		
 		JButton btnEditar = new JButton("Editar");
-		btnEditar.setBounds(389, 844, 111, 67);
+		btnEditar.setBounds(241, 581, 111, 73);
 		btnEditar.setContentAreaFilled(false);
 		btnEditar.setVerticalTextPosition(SwingConstants.BOTTOM);
 		btnEditar.setVerticalAlignment(SwingConstants.BOTTOM);
@@ -185,7 +192,7 @@ public class VistaRegistro extends JFrame {
 		btnEditar.setBorder(null);
 		
 		JButton btnEliminarPersona = new JButton("Eliminar");
-		btnEliminarPersona.setBounds(506, 860, 70, 51);
+		btnEliminarPersona.setBounds(355, 593, 70, 61);
 		btnEliminarPersona.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnEliminarPersona.setVerticalTextPosition(SwingConstants.BOTTOM);
 		btnEliminarPersona.setVerticalAlignment(SwingConstants.BOTTOM);
@@ -196,24 +203,13 @@ public class VistaRegistro extends JFrame {
 		
 		
 		JButton btnGuardar = new JButton("Guardar");
-		btnGuardar.setBounds(125, 860, 76, 51);
+		btnGuardar.setBounds(67, 593, 76, 61);
 		btnGuardar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DataRegistro dr=new DataRegistro();
-				Registro regi=new Registro();
-				regi.setIdCliente(Integer.parseInt(txtIdCliente.getText()));
-				regi.setNombre(txtNombre.getText());
-				regi.setApellidoP(txtApellidoP.getText());
-				regi.setApellidoM(txtApellidoM.getText());
-				regi.setSexo(rdbtnMujer.isSelected());
-				regi.setSexo(rdbtnHombre.isSelected());
-				regi.setFechaDeNacimiento(dcCalendario.getDate());
-				regi.setCurp(txtCurp.getText());
-				regi.setNumeroTelefonico(Integer.parseInt(txtNumeroT.getText()));
-				regi.setCorreoElectronico(txtCorreoE.getText());
-				regi.setDireccion(txtDireccion.getText());
-				regi.setActivo(chckbxActivo.isSelected());
-				dr.guardar(regi);
+				//Registro regi=new Registro();
+				guardar();
+
 			}
 		});
 		btnGuardar.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -234,103 +230,103 @@ public class VistaRegistro extends JFrame {
 				
 			}
 		});
-		txtBuscar.setBounds(716, 146, 660, 20);
+		txtBuscar.setBounds(723, 45, 660, 20);
 		txtBuscar.addKeyListener(new KeyAdapter() {
 			
 		});
 	
 		txtBuscar.setHorizontalAlignment(SwingConstants.CENTER);
 		txtBuscar.setColumns(10);
-		ImageIcon icon= new ImageIcon(getClass().getResource("OIP.jpg"));
+		//ImageIcon icon= new ImageIcon(getClass().getResource("OIP.jpg"));
 		
 		JLabel lblBuscar = new JLabel("Buscar");
-		lblBuscar.setBounds(1402, 140, 111, 32);
+		lblBuscar.setBounds(1409, 39, 111, 32);
 		lblBuscar.setIcon(new ImageIcon(VistaRegistro.class.getResource("/iconos/glassmagnifiermagnifyingsearchsearchingweb_123111.png")));
 		
 		JLabel lblNombre = new JLabel("Nombre:");
-		lblNombre.setBounds(68, 285, 83, 14);
+		lblNombre.setBounds(10, 139, 83, 14);
 		lblNombre.setFont(new Font("Arial", Font.ITALIC, 12));
 		
 		txtNombre = new JTextField();
-		txtNombre.setBounds(238, 282, 438, 20);
+		txtNombre.setBounds(180, 136, 438, 20);
 		txtNombre.setColumns(10);
 		
 		txtApellidoP = new JTextField();
-		txtApellidoP.setBounds(238, 333, 438, 20);
+		txtApellidoP.setBounds(180, 187, 438, 20);
 		txtApellidoP.setColumns(10);
 		
 		txtApellidoM = new JTextField();
-		txtApellidoM.setBounds(238, 390, 444, 20);
+		txtApellidoM.setBounds(180, 244, 444, 20);
 		txtApellidoM.setColumns(10);
 		
 	     dcCalendario = new JDateChooser();
-	     dcCalendario.setBounds(238, 447, 438, 20);
+	     dcCalendario.setBounds(180, 301, 438, 20);
 		
 		txtDireccion = new JTextField();
-		txtDireccion.setBounds(238, 494, 444, 20);
+		txtDireccion.setBounds(180, 348, 444, 20);
 		txtDireccion.setColumns(10);
 		
 		txtCurp = new JTextField();
-		txtCurp.setBounds(238, 550, 444, 20);
+		txtCurp.setBounds(180, 404, 444, 20);
 		txtCurp.setColumns(10);
 		
 		txtNumeroT = new JTextField();
-		txtNumeroT.setBounds(238, 597, 444, 20);
+		txtNumeroT.setBounds(180, 451, 444, 20);
 		txtNumeroT.setColumns(10);
 		
 		txtCorreoE = new JTextField();
-		txtCorreoE.setBounds(238, 652, 444, 20);
+		txtCorreoE.setBounds(180, 506, 444, 20);
 		txtCorreoE.setColumns(10);
 		
 		JLabel lblCorreoElectronico = new JLabel("Correo electronico:");
-		lblCorreoElectronico.setBounds(68, 652, 166, 20);
+		lblCorreoElectronico.setBounds(10, 506, 166, 20);
 		lblCorreoElectronico.setFont(new Font("Arial", Font.ITALIC, 12));
 		
 		JLabel lblNmeroDeTelefono = new JLabel("Número de telefono:");
-		lblNmeroDeTelefono.setBounds(68, 597, 166, 20);
+		lblNmeroDeTelefono.setBounds(10, 451, 166, 20);
 		lblNmeroDeTelefono.setFont(new Font("Arial", Font.ITALIC, 12));
 		
 		JLabel lblCurp = new JLabel("CURP:");
-		lblCurp.setBounds(68, 550, 166, 20);
+		lblCurp.setBounds(10, 404, 166, 20);
 		lblCurp.setFont(new Font("Arial", Font.ITALIC, 12));
 		
 		JLabel lblDireccin = new JLabel("Dirección:");
-		lblDireccin.setBounds(68, 494, 166, 20);
+		lblDireccin.setBounds(10, 348, 166, 20);
 		lblDireccin.setFont(new Font("Arial", Font.ITALIC, 12));
 		
 		JLabel lblFechaDeNacimiento = new JLabel("Fecha de Nacimiento:");
-		lblFechaDeNacimiento.setBounds(68, 447, 166, 20);
+		lblFechaDeNacimiento.setBounds(10, 301, 166, 20);
 		lblFechaDeNacimiento.setFont(new Font("Arial", Font.ITALIC, 12));
 		
 		JLabel lblApellidoPaterno = new JLabel("Apellido Materno:");
-		lblApellidoPaterno.setBounds(68, 390, 166, 20);
+		lblApellidoPaterno.setBounds(10, 244, 166, 20);
 		lblApellidoPaterno.setFont(new Font("Arial", Font.ITALIC, 12));
 		
 		JLabel lblApellidoMaterno = new JLabel("Apellido Paterno:");
-		lblApellidoMaterno.setBounds(68, 333, 166, 20);
+		lblApellidoMaterno.setBounds(10, 187, 166, 20);
 		lblApellidoMaterno.setFont(new Font("Arial", Font.ITALIC, 12));
 		
 		JLabel lblImagen = new JLabel("Sexo:");
-		lblImagen.setBounds(91, 692, 60, 14);
+		lblImagen.setBounds(33, 546, 60, 14);
 		
 	    rdbtnHombre = new JRadioButton("Hombre");
-	    rdbtnHombre.setBounds(219, 697, 63, 23);
+	    rdbtnHombre.setBounds(161, 551, 63, 23);
 		
 	    rdbtnMujer = new JRadioButton("Mujer");
-	    rdbtnMujer.setBounds(413, 697, 63, 23);
+	    rdbtnMujer.setBounds(355, 551, 63, 23);
 		
 		bg.add(rdbtnMujer);
 		bg.add(rdbtnHombre);
 		
 		JLabel lblNewLabel = new JLabel("Id cliente:");
-		lblNewLabel.setBounds(68, 249, 48, 14);
+		lblNewLabel.setBounds(10, 103, 48, 14);
 		
 		txtIdCliente = new JTextField();
-		txtIdCliente.setBounds(238, 244, 438, 20);
+		txtIdCliente.setBounds(180, 98, 438, 20);
 		txtIdCliente.setColumns(10);
 		
 	    chckbxActivo = new JCheckBox("Activo");
-	    chckbxActivo.setBounds(82, 738, 119, 23);
+	    chckbxActivo.setBounds(476, 551, 119, 23);
 		contentPane.setLayout(null);
 		contentPane.add(rdbtnHombre);
 		contentPane.add(btnGuardar);
@@ -362,26 +358,77 @@ public class VistaRegistro extends JFrame {
 		contentPane.add(lblBuscar);
 		contentPane.add(chckbxActivo);
 		
-		JButton btnNewButton = new JButton("Guardar");
-		btnNewButton.setIcon(new ImageIcon("C:\\Users\\Hp\\Downloads\\salvar111.png"));
-		btnNewButton.setBounds(193, 725, 89, 59);
-		contentPane.add(btnNewButton);
-		
-		JButton btnNewButton_1 = new JButton("Consultar");
-		btnNewButton_1.setIcon(new ImageIcon("C:\\Users\\Hp\\Downloads\\consulta1.png"));
-		btnNewButton_1.setBounds(359, 738, 111, 78);
-		contentPane.add(btnNewButton_1);
-		
-		JButton btnNewButton_2 = new JButton("Actualizar");
-		btnNewButton_2.setIcon(new ImageIcon("C:\\Users\\Hp\\Downloads\\actualizar-datos1.png"));
-		btnNewButton_2.setBounds(515, 738, 89, 78);
-		contentPane.add(btnNewButton_2);
-		
-		JButton btnNewButton_3 = new JButton("Eliminar");
-		btnNewButton_3.setIcon(new ImageIcon("C:\\Users\\Hp\\Downloads\\error.png"));
-		btnNewButton_3.setBounds(652, 738, 76, 78);
-		contentPane.add(btnNewButton_3);
+		JLabel lblNewLabel_1 = new JLabel("");
+		lblNewLabel_1.setBounds(0, 0, 1600, 827);
+		contentPane.add(lblNewLabel_1);
+		ImageIcon icone=new ImageIcon(getClass().getResource("RegiFondo.jpg"));
+		ImageIcon imgi =new ImageIcon(icone.getImage().getScaledInstance(lblNewLabel_1.getWidth(), lblNewLabel_1.getHeight(), Image.SCALE_SMOOTH));
+		lblNewLabel_1.setIcon(imgi);
 		this.setExtendedState(Frame.MAXIMIZED_BOTH);
 	
+	}
+	private boolean guardar() {
+		boolean guardado = false;
+	    Registro reg = new Registro(
+	        Integer.parseInt(txtIdCliente.getText()),
+	        txtNombre.getText(),
+	        txtApellidoP.getText(),
+	        txtApellidoM.getText(),
+	        rdbtnHombre.isSelected() ? "Hombre" : "Mujer",
+	        dcCalendario.getDate(),
+	        txtCurp.getText(),
+	        Integer.parseInt(txtNumeroT.getText()),
+	        txtCorreoE.getText(),
+	        txtDireccion.getText(),
+	        chckbxActivo.isSelected()
+	    );
+
+	    DataRegistro dr = new DataRegistro();
+	    guardado = dr.guardar(reg);
+
+	    if (guardado) {
+	        // Agregar registro a la JTable
+	        modelo.addRow(new Object[] {
+	            reg.getIdCliente(),
+	            reg.getNombre(),
+	            reg.getApellidoP(),
+	            reg.getApellidoM(),
+	            reg.getSexo(),
+	            reg.getFechaDeNacimiento(),
+	            reg.getCurp(),
+	            reg.getNumeroTelefonico(),
+	            reg.getCorreoElectronico(),
+	            reg.getDireccion(),
+	            reg.isActivo()
+	        });
+	       // modelo.addRow(fila); // Agrega la fila a la tabla
+            limpiarCampos(); // Limpia los campos del formulario
+	    }
+
+	    return guardado;
+	
+		   
+		           
+		           
+		        
+
+	}
+
+	private void limpiarCampos() {
+		txtIdCliente.setText("");
+		txtNombre.setText("");
+		txtApellidoM.setText("");
+		
+	    rdbtnHombre.setSelected(false);
+	    rdbtnMujer.setSelected(false);
+	    dcCalendario.setDate(null);
+		txtCurp.setText("");
+		txtNumeroT.setText("");
+		txtCorreoE.setText("");
+		txtDireccion.setText("");
+		chckbxActivo.setSelected(false);
+		
+		
+		
 	}
 }

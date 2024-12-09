@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
 import modelo.Registro;
 
 public class DataRegistro {
-	Conxion co=new Conxion();
+	private Conxion co=new Conxion();
 	private Connection cone;
 	private PreparedStatement ps;
 
@@ -21,20 +21,20 @@ public class DataRegistro {
 		boolean guarda=false;
 		cone=co.conectar();
 		try {
-			ps=cone.prepareStatement("insert into registros values(?,?,?,?,?,?,?,?,?,?,true)");
+			ps=cone.prepareStatement("insert into reporte values(?,?,?,?,?,?,?,?,?,?,true)");
 			ps.setInt(1,regi.getIdCliente());
 			ps.setString(2,regi.getNombre());
 			ps.setString(3,regi.getApellidoP());
 			ps.setString(4,regi.getApellidoM());
-			ps.setBoolean(5,regi.getSexo());
+			ps.setString(5,regi.getSexo());
 			java.sql.Date sqlDate = new java.sql.Date(regi.getFechaDeNacimiento().getTime());
 			ps.setDate(6, sqlDate);
 			ps.setString(7, regi.getCurp());
 			ps.setInt(8,regi.getNumeroTelefonico());
 			ps.setString(9,regi.getCorreoElectronico());
 			ps.setString(10,regi.getDireccion());
-			ps.setBoolean(11,regi.getActivo());
-			int filasModificadas=ps.executeUpdate();
+			//ps.setBoolean(11,regi.getActivo());
+			int filasModificadas=ps.executeUpdate(); 
 			if(filasModificadas>0) {
 				guarda=true;
 				JOptionPane.showMessageDialog(null,"Datos guardados correctamente");
@@ -59,7 +59,7 @@ public class DataRegistro {
 	
 	public Registro consultarRegistro(int idCliente) {
 		Registro reg=new Registro();
-		String sql="select * from registros where idCliente=?";
+		String sql="select * from reporte where id_Cliente=?";
 		cone=co.conectar();
 		LocalDate VistaRegistro= null;
 		try {
@@ -71,7 +71,7 @@ public class DataRegistro {
 				reg.setNombre(rs.getString(2));
 				reg.setApellidoP(rs.getString(3));
 				reg.setApellidoM(rs.getString(4));
-				reg.setSexo(rs.getBoolean(5));
+				reg.setSexo(rs.getString(5));
 				VistaRegistro=rs.getDate(6).toLocalDate();
 				reg.setCurp(rs.getString(7));
 				reg.setNumeroTelefonico(rs.getInt(8));
@@ -99,19 +99,19 @@ public class DataRegistro {
 		boolean actuali=false;
 		cone=co.conectar();
 		try {
-			ps=cone.prepareStatement("update registros set nombre=?,apellidoPaterno=?,apellidoMaterno=?,sexo=?,fechaDeNacimiento=?,curp=?,numeroTelefonico=?,correoElectronico=?,direccion=?,activo=true,where idCliente=?");
+			ps=cone.prepareStatement("update reporte set nombre=?,apellidoPaterno=?,apellidoMaterno=?,sexo=?,fechaDeNacimiento=?,direccion=?,curp=?,numeroTelefonico=?,correo=?,activo=true where id_Cliente=?");
 			ps.setInt(1,regi.getIdCliente());
 			ps.setString(2,regi.getNombre());
 			ps.setString(3,regi.getApellidoP());
 			ps.setString(4,regi.getApellidoM());
-			ps.setBoolean(5,regi.getSexo());
+			ps.setString(5,regi.getSexo());
 			java.sql.Date sqlDate = new java.sql.Date(regi.getFechaDeNacimiento().getTime());
 			ps.setDate(6, sqlDate);
 			ps.setString(7, regi.getCurp());
 			ps.setInt(8,regi.getNumeroTelefonico());
 			ps.setString(9,regi.getCorreoElectronico());
 			ps.setString(10,regi.getDireccion());
-			ps.setBoolean(11,regi.getActivo());
+			ps.setBoolean(11,regi.isActivo());
 			int filasModificadas=ps.executeUpdate();
 			if(filasModificadas>0) {
 				actuali=true;
@@ -135,14 +135,15 @@ public class DataRegistro {
 		
 	}
 	
-	public boolean eliminar(int idCliente) {
+	public boolean eliminar(int id_Cliente) {
 		boolean elimina=false;
 		cone=co.conectar();
 		try {
-			ps=cone.prepareStatement("update registros set activo=false where idClientes=?");
-			ps.setInt(1, idCliente);
+			ps=cone.prepareStatement("update registro set activo=false where id_Cliente=?");
+			ps.setInt(1, id_Cliente);
 			int filasModificadas=ps.executeUpdate();
 			if(filasModificadas>0) {
+				elimina=true;
 				JOptionPane.showMessageDialog(null,"Datos eliminados correctamente");
 				
 			}else {

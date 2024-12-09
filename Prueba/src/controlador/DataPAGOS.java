@@ -12,7 +12,7 @@ import modelo.Pagos;
 import modelo.Reporte;
 
 public class DataPAGOS {
-	Conxion co=new Conxion();
+	private Conxion co=new Conxion();
 
 	private Connection cone;
 	private PreparedStatement ps;
@@ -38,6 +38,8 @@ public class DataPAGOS {
 
 				
 			}
+			ps.close();
+			cone.close();
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

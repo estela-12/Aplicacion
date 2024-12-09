@@ -29,6 +29,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JProgressBar;
+import java.awt.Color;
 
 public class RegistroLog extends JFrame {
 
@@ -64,7 +65,7 @@ public class RegistroLog extends JFrame {
 		setTitle("Registrate en MAHE SOLUTIONS");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(RegistroLog.class.getResource("/iconos/WhatsApp Image 2024-11-29 at 14.20.07.jpeg")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1031, 595);
+		setBounds(100, 100, 1031, 731);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -75,24 +76,24 @@ public class RegistroLog extends JFrame {
 		
 		JLabel lblUsuario = new JLabel("Usuario:");
 		lblUsuario.setFont(new Font("Rockwell", Font.ITALIC, 14));
-		lblUsuario.setBounds(258, 64, 125, 14);
+		lblUsuario.setBounds(478, 233, 125, 14);
 		contentPane.add(lblUsuario);
 		
 		txtUsuario = new JTextField();
 		txtUsuario.setColumns(10);
-		txtUsuario.setBounds(258, 90, 328, 20);
+		txtUsuario.setBounds(478, 259, 328, 20);
 		contentPane.add(txtUsuario);
 		
 		JLabel lblContrasea = new JLabel("Contraseña:");
 		lblContrasea.setFont(new Font("Rockwell", Font.ITALIC, 14));
-		lblContrasea.setBounds(258, 162, 125, 14);
+		lblContrasea.setBounds(478, 331, 125, 14);
 		contentPane.add(lblContrasea);
 		
 		//JComboBox<String> registerRoleBox= new JComboBox<>(new String[] {"Administrador", "Usuario"});
 
 		
 		passContraseña = new JPasswordField();
-		passContraseña.setBounds(258, 187, 328, 20);
+		passContraseña.setBounds(478, 356, 328, 20);
 		contentPane.add(passContraseña);
 		
 		JButton btnRegistrarse = new JButton("Registrarse");
@@ -156,7 +157,7 @@ public class RegistroLog extends JFrame {
 		});
 		btnRegistrarse.setBorder(null);
 		btnRegistrarse.setBackground(SystemColor.activeCaption);
-		btnRegistrarse.setBounds(357, 417, 169, 23);
+		btnRegistrarse.setBounds(577, 586, 169, 23);
 		contentPane.add(btnRegistrarse);
 		
 		btnMostrar = new JButton("");
@@ -167,20 +168,49 @@ public class RegistroLog extends JFrame {
 			}
 		});
 		btnMostrar.setBackground(SystemColor.window);
-		btnMostrar.setBounds(584, 187, 91, 20);
+		btnMostrar.setBounds(804, 356, 91, 20);
 		contentPane.add(btnMostrar);
 		
 		progBarra = new JProgressBar();
-		progBarra.setBackground(SystemColor.inactiveCaption);
-		progBarra.setBounds(327, 309, 229, 23);
+		progBarra.setBackground(new Color(0, 128, 64));
+		progBarra.setBounds(547, 478, 229, 23);
 		contentPane.add(progBarra);
 		
+		JButton btnRegresar = new JButton("Regresar");
+		btnRegresar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Login lo=new Login();
+				lo.setVisible(true);
+				dispose();
+			}
+		});
+		btnRegresar.setBorder(null);
+		btnRegresar.setBackground(SystemColor.activeCaption);
+		btnRegresar.setBounds(577, 637, 169, 23);
+		contentPane.add(btnRegresar);
+		
 		JLabel lblImagen = new JLabel("");
-		lblImagen.setBounds(0, 0, 1015, 556);
+		lblImagen.setBounds(382, 0, 633, 692);
 		ImageIcon ico=new ImageIcon(getClass().getResource("OIP.jpg"));
 		ImageIcon img =new ImageIcon(ico.getImage().getScaledInstance(lblImagen.getWidth(), lblImagen.getHeight(), Image.SCALE_SMOOTH));
 		lblImagen.setIcon(img);
 		contentPane.add(lblImagen);
+		
+
+		
+		JPanel panel = new JPanel();
+		panel.setBackground(SystemColor.desktop);
+		panel.setBounds(0, 0, 382, 692);
+		contentPane.add(panel);
+		panel.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("New label");
+		//lblNewLabel.setIcon(new ImageIcon(RegistroLog.class.getResource("/iconos/WhatsApp Image 2024-11-29 at 14.40.06 (1).jpeg")));
+		lblNewLabel.setBounds(10, 138, 362, 326);
+		ImageIcon icon=new ImageIcon(getClass().getResource("/iconos/WhatsApp Image 2024-11-29 at 14.40.06 (1).jpeg"));
+		ImageIcon imgi =new ImageIcon(icon.getImage().getScaledInstance(lblNewLabel.getWidth(), lblNewLabel.getHeight(), Image.SCALE_SMOOTH));
+		lblNewLabel.setIcon(imgi);
+		panel.add(lblNewLabel);
 		
 		
 	}
@@ -195,5 +225,4 @@ public class RegistroLog extends JFrame {
 		}
 		contraseñaVisi=!contraseñaVisi;
 	}
-	
 }

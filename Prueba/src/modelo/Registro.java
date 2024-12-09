@@ -1,6 +1,6 @@
 package modelo;
 
-import java.sql.Date;
+import java.util.Date;
 
 public class Registro {
 	
@@ -9,13 +9,15 @@ public class Registro {
 	private String nombre;
 	private String apellidoP;
 	private String apellidoM;
-	private Boolean sexo;
-    private java.util.Date fechaDeNacimiento;
+	private String sexo; // Cambiado a String para representar "Hombre" o "Mujer"
+    private Date fechaDeNacimiento; // Usar java.util.Date
     private String curp;
     private int numeroTelefonico;
     private String correoElectronico;
     private String direccion;
     private boolean activo;
+
+    // Getters y Setters
 	public int getIdCliente() {
 		return idCliente;
 	}
@@ -40,17 +42,17 @@ public class Registro {
 	public void setApellidoM(String apellidoM) {
 		this.apellidoM = apellidoM;
 	}
-	public boolean getSexo() {
+	public String getSexo() {
 		return sexo;
 	}
-	public void setSexo(boolean sexo) {
+	public void setSexo(String sexo) {
 		this.sexo = sexo;
 	}
 	public Date getFechaDeNacimiento() {
-		return (Date) fechaDeNacimiento;
+		return fechaDeNacimiento;
 	}
-	public void setFechaDeNacimiento(java.util.Date date) {
-		this.fechaDeNacimiento = date;
+	public void setFechaDeNacimiento(Date fechaDeNacimiento) {
+		this.fechaDeNacimiento = fechaDeNacimiento;
 	}
 	public String getCurp() {
 		return curp;
@@ -76,16 +78,22 @@ public class Registro {
 	public void setDireccion(String direccion) {
 		this.direccion = direccion;
 	}
-	public boolean getActivo() {
+	public boolean isActivo() {
 		return activo;
 	}
 	public void setActivo(boolean activo) {
 		this.activo = activo;
 	}
-	public Registro(int idCliente, String nombre, String apellidoP, String apellidoM, boolean sexo,
-			Date fechaDeNacimiento, String curp, int numeroTelefonico, String correoElectronico, String direccion,
-			boolean activo) {
+
+	// Constructor vacío
+	public Registro() {
 		super();
+	}
+	
+	// Constructor con todos los campos
+	public Registro(int idCliente, String nombre, String apellidoP, String apellidoM, String sexo,
+			Date fechaDeNacimiento, String curp, int numeroTelefonico, String correoElectronico, 
+			String direccion, boolean activo) {
 		this.idCliente = idCliente;
 		this.nombre = nombre;
 		this.apellidoP = apellidoP;
@@ -98,11 +106,4 @@ public class Registro {
 		this.direccion = direccion;
 		this.activo = activo;
 	}
-	public Registro() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-    
-    
-
 }
