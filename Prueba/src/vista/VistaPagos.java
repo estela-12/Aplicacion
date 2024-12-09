@@ -7,7 +7,9 @@ import java.awt.Image;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
+import controlador.DataPAGOS;
 import modelo.Pagos;
 import modelo.Reporte;
 
@@ -24,9 +26,14 @@ import javax.swing.SwingConstants;
 import java.awt.Toolkit;
 import java.awt.Color;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+
 import java.awt.event.ActionListener;
 import java.util.Date;
+import java.util.List;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class VistaPagos extends JFrame {
 
@@ -35,8 +42,10 @@ public class VistaPagos extends JFrame {
 	private JTextField txtIdPago;
 	private JTextField txtPagosPen;
 	private JTextField txtSaldoAPagar;
-	private Date txtFechaLim;
+	private JTextField txtFechaLim;
 	private JTable table;
+	private DefaultTableModel modelo;
+	private JButton btnGuardar, btnEditar, btnEliminar, btnConsultar;
 
 	/**
 	 * Launch the application.
@@ -83,9 +92,23 @@ public class VistaPagos extends JFrame {
 		mnNewMenu.add(mntmNewMenuItem);
 		
 		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Registro De Clientes");
+		mntmNewMenuItem_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				VistaRegistro vre= new VistaRegistro();
+				vre.setVisible(true);
+				dispose();
+			}
+		});
 		mnNewMenu.add(mntmNewMenuItem_1);
 		
 		JMenuItem mntmNewMenuItem_2 = new JMenuItem("Reportes");
+		mntmNewMenuItem_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				VistaRepo vrep=new VistaRepo();
+				vrep.setVisible(true);
+				dispose();
+				}
+		});
 		mnNewMenu.add(mntmNewMenuItem_2);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -125,18 +148,44 @@ public class VistaPagos extends JFrame {
 		txtSaldoAPagar.setColumns(10);
 		
 		txtFechaLim = new JTextField();
+		txtFechaLim.setText("año/mes/dia");
 		txtFechaLim.setBounds(191, 339, 167, 20);
 		contentPane.add(txtFechaLim);
 		txtFechaLim.setColumns(10);
 		
-		JScrollPane scrollPane = new JScrollPane();
+		modelo= new DefaultTableModel(new String[] {"Id Pago", "Pagos Pendientes","Saldo a Pagar", "Fecha Limite"}, 0);
+		table = new JTable(modelo);
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int filas=table.getSelectedRow();
+				if(filas != -1) {
+					txtIdPago.setText(table.getValueAt(filas, 0).toString());
+					txtPagosPen.setText(table.getValueAt(filas, 1).toString());
+					txtSaldoAPagar.setText(table.getValueAt(filas, 2).toString());
+					txtFechaLim.setText(table.getValueAt(filas, 3).toString());
+				}
+			}
+		});
+		table.setBackground(new Color(226, 242, 254));
+		
+		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setBounds(518, 137, 848, 484);
 		contentPane.add(scrollPane);
+		cargarDatos();
 		
-		table = new JTable();
+		
 		scrollPane.setViewportView(table);
 		
 		JButton btnEliminarPersona = new JButton("Eliminar");
+		btnEliminarPersona.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				eliminarPago();
+				cargarDatos();
+
+				
+			}
+		});
 		btnEliminarPersona.setVerticalTextPosition(SwingConstants.BOTTOM);
 		btnEliminarPersona.setVerticalAlignment(SwingConstants.BOTTOM);
 		btnEliminarPersona.setIcon(new ImageIcon(VistaPagos.class.getResource("/iconos/seo-social-web-network-internet_262_icon-icons.com_61518.png")));
@@ -147,6 +196,13 @@ public class VistaPagos extends JFrame {
 		contentPane.add(btnEliminarPersona);
 		
 		JButton btnEditar = new JButton("Editar");
+		btnEditar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				editarPago();
+				cargarDatos();
+
+			}
+		});
 		btnEditar.setVerticalTextPosition(SwingConstants.BOTTOM);
 		btnEditar.setVerticalAlignment(SwingConstants.BOTTOM);
 		btnEditar.setIcon(new ImageIcon(VistaPagos.class.getResource("/iconos/UserEdit_40958.png")));
@@ -157,6 +213,11 @@ public class VistaPagos extends JFrame {
 		contentPane.add(btnEditar);
 		
 		JButton btnConsultarPersona = new JButton("Consultar");
+		btnConsultarPersona.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cargarDatos();
+			}
+		});
 		btnConsultarPersona.setVerticalTextPosition(SwingConstants.BOTTOM);
 		btnConsultarPersona.setVerticalAlignment(SwingConstants.BOTTOM);
 		btnConsultarPersona.setIcon(new ImageIcon(VistaPagos.class.getResource("/iconos/3709746-customer-evaluation-review-satisfaction-system_108070.png")));
@@ -169,7 +230,9 @@ public class VistaPagos extends JFrame {
 		JButton btnGuardar = new JButton("Guardar");
 		btnGuardar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				guardar();
+				guardarPago();
+				cargarDatos();
+			
 			}
 		});
 		btnGuardar.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -188,10 +251,63 @@ public class VistaPagos extends JFrame {
 		contentPane.add(lblNewLabel_1);
 		this.setExtendedState(Frame.MAXIMIZED_BOTH);
 	}
-	private boolean guardar() {
-		boolean guarda=false;
-		Pagos rep=new Pagos (Integer.parseInt(txtIdPago.getText()),txtPagosPen.getText(),txtSaldoAPagar.getText(),txtFechaLim.getDate());
-		return guarda;
+	private void guardarPago() {
+		String idPago=txtIdPago.getText();
+		int pagosPendientes;
+		double saldoAPagar;
+		String fechaLimite=txtFechaLim.getText();
+		try {
+			
+		
+		pagosPendientes=Integer.parseInt(txtPagosPen.getText());
+		saldoAPagar=Double.parseDouble(txtSaldoAPagar.getText());
+		}catch(NumberFormatException e) {
+			JOptionPane.showMessageDialog(this, "Pagos pendietes y saldo a pagar deben ser numeros");
+			return;
+		}
+	
+	DataPAGOS dp= new DataPAGOS();
+	boolean re=dp.guardar( idPago,  pagosPendientes,  saldoAPagar, fechaLimite);
+	if(re) {
+		JOptionPane.showMessageDialog(this, "Pago registrado correctamente");
+		limpiar();
+	}else {
+		JOptionPane.showMessageDialog(this, "No se pudo registrar el pago");
+	}
+	}
+	private void cargarDatos() {
+		modelo.setRowCount(0);
+		DataPAGOS dp=new DataPAGOS();
+		List<Object[]> pagos=dp.obtenerPagos();
+		for(Object[] pago : pagos) {
+			modelo.addRow(pago);
+		}
+}
+	private void limpiar() {
+		txtIdPago.setText("");
+		txtPagosPen.setText("");
+		txtSaldoAPagar.setText("");
+		txtFechaLim.setText("");
+	}
+	private void editarPago() {
+		DataPAGOS dpa=new DataPAGOS();
+		dpa.editarPago(txtIdPago.getText(), Integer.parseInt(txtPagosPen.getText()), Double.parseDouble(txtSaldoAPagar.getText()), txtFechaLim.getText());
+		limpiar();
+
+	
+		}
+	
+	private void eliminarPago() {
+		int filas=table.getSelectedRow();
+		if(filas !=-1) {
+			String id=(String) table.getValueAt(filas, 0);
+			DataPAGOS dpa=new DataPAGOS();
+			dpa.eliminarPago(id);
+			cargarDatos();
+			limpiar();
+
+		}
 		
 	}
+
 }

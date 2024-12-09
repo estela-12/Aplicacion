@@ -10,6 +10,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
@@ -20,17 +21,26 @@ import java.awt.Image;
 
 import javax.swing.JScrollPane;
 import com.toedter.calendar.JDateChooser;
+
+import controlador.Conxion;
+import controlador.DataReporte;
+import modelo.Reporte;
+
 import java.awt.Color;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 
 public class VistaRepo extends JFrame {
 
 	private static final long serialVersionUID = 1L;
+	//private static final Reporte Reporte = null;
 	private JPanel contentPane;
 	private JTable table;
-	private JTextField textField;
+	private JTextField txtDescripcion;
 	private JTextField txtIdR;
+	private JDateChooser dcLevantami;
+	private JDateChooser dcCorteA;
 
 	/**
 	 * Launch the application.
@@ -108,6 +118,12 @@ public class VistaRepo extends JFrame {
 		scrollPane.setViewportView(table);
 		
 		JButton btnGuardar = new JButton("Guardar");
+		btnGuardar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				guardar();
+				limpiar();
+			}
+		});
 		btnGuardar.setVerticalTextPosition(SwingConstants.BOTTOM);
 		btnGuardar.setIcon(new ImageIcon(VistaRepo.class.getResource("/iconos/savedisk_floppydisk_guardar_1543.png")));
 		btnGuardar.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -146,10 +162,10 @@ public class VistaRepo extends JFrame {
 		btnEliminarPersona.setBounds(345, 481, 70, 61);
 		contentPane.add(btnEliminarPersona);
 		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(195, 394, 374, 20);
-		contentPane.add(textField);
+		txtDescripcion = new JTextField();
+		txtDescripcion.setColumns(10);
+		txtDescripcion.setBounds(195, 394, 374, 20);
+		contentPane.add(txtDescripcion);
 		
 		JLabel lblDescripcion = new JLabel("Descripcion:");
 		lblDescripcion.setFont(new Font("Arial", Font.ITALIC, 12));
@@ -176,11 +192,12 @@ public class VistaRepo extends JFrame {
 		txtIdR.setBounds(195, 236, 374, 20);
 		contentPane.add(txtIdR);
 		
-		JDateChooser dcLevantami = new JDateChooser();
+		dcLevantami = new JDateChooser();
+		dcLevantami.setDateFormatString("dd-MM-yyyy");
 		dcLevantami.setBounds(195, 292, 374, 20);
 		contentPane.add(dcLevantami);
 		
-		JDateChooser dcCorteA = new JDateChooser();
+		dcCorteA = new JDateChooser();
 		dcCorteA.setBounds(195, 339, 374, 20);
 		contentPane.add(dcCorteA);
 		
@@ -191,4 +208,51 @@ public class VistaRepo extends JFrame {
 		lblImagenF.setIcon(imgi);
 		contentPane.add(lblImagenF);
 	}
+	private  void guardar()  {
+		
+		String idRepo= txtIdR.getText();
+		String descripsion=txtDescripcion.getText();
+		java.util.Date fechaL=dcLevantami.getDate();
+		java.util.Date fechaC=dcCorteA.getDate();
+		
+		if(idRepo.isEmpty() || descripsion.isEmpty() || fechaL==null || fechaC==null) {
+			JOptionPane.showMessageDialog(null, "Por favor, completa todos los campos"); 
+			return;
+
+		}
+		
+		
+		try {
+			int idRepoI = Integer.parseInt(idRepo);
+			java.sql.Date fechaLe= new java.sql.Date(fechaL.getTime());
+			java.sql.Date fechaCo= new java.sql.Date(fechaC.getTime());
+			   Reporte reporte = new Reporte(idRepoI, fechaCo, fechaLe, descripsion);	        
+	        
+	        boolean exito = DataReporte.guardar(reporte);
+	        
+	        if (exito) {
+                JOptionPane.showMessageDialog(null, "Reporte guardado con éxito");
+            } else {
+                JOptionPane.showMessageDialog(null, "No se pudo guardar el reporte");
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "El ID debe ser un número válido");
+            e.printStackTrace();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Ocurrió un error al guardar el reporte");
+            e.printStackTrace();
+        }
+    }
+	private void limpiar() {
+		txtIdR.setText("");
+		txtDescripcion.setText("");
+		dcLevantami.setDate(null);
+		dcCorteA.setDate(null);
+		
+	}
+
 }
+
+
+
+

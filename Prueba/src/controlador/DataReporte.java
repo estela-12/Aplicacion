@@ -22,12 +22,12 @@ public class DataReporte {
 		boolean guarda=false;
 		cone=co.conectar(); 
 		try {
-			ps=cone.prepareStatement("insert into reportes values(?,?,?,?)");
+			ps=cone.prepareStatement("insert into reporte2 values(?,?,?,?)");
 			ps.setInt(1,repo.getIdReporte());
-			java.sql.Date sqlDate = new java.sql.Date(repo.getFechaDelLevantamientoDelReporte().getTime());
-			ps.setDate(2, sqlDate);
-			java.sql.Date sqlDate1 = new java.sql.Date(repo.getFechaDelCorteDeAgua().getTime());
-			ps.setDate(3, sqlDate1);
+			//java.sql.Date sqlDate = new java.sql.Date(repo.getFechaDelLevantamientoDelReporte().getTime());
+			ps.setDate(2, repo.getFechaDelLevantamientoDelReporte());
+			//java.sql.Date sqlDate1 = new java.sql.Date(repo.getFechaDelCorteDeAgua().getTime());
+			ps.setDate(3, repo.getFechaDelCorteDeAgua());
 			//ps.setString(4,repo.getDireccion());
 			//ps.setInt(5,repo.getNumeroTelefonico());
 			ps.setString(4,repo.getDescripcionDelReporte());
@@ -43,7 +43,8 @@ public class DataReporte {
 
 				
 			}
-
+			ps.close();
+			cone.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
@@ -54,7 +55,7 @@ public class DataReporte {
 	}
 	public Reporte consultarReporte(int idReporte) {
 		Reporte rep=new Reporte();
-		String sql="select * from reportes where idCliente=?";
+		String sql="select * from reportes2 where id_rep=?";
 		cone=co.conectar();
 		LocalDate VistaReportes= null;
 		try {
@@ -63,6 +64,7 @@ public class DataReporte {
 			ResultSet rs=ps.executeQuery();
 			if(rs.next()) {
 				rep.setIdReporte(rs.getInt(1));
+				
 				VistaReportes=rs.getDate(2).toLocalDate();
 				VistaReportes=rs.getDate(3).toLocalDate();
 				//rep.setDireccion(rs.getString(4));
@@ -90,7 +92,7 @@ public class DataReporte {
 		boolean actuali=false;
 		cone=co.conectar();
 		try {
-			ps=cone.prepareStatement("update reportes set fechaDelLevantamientoDelReporte=?,fechaDelCorteDeAgua=?,descripcionDelReporte=?,,where idReporte=?");
+			ps=cone.prepareStatement("update reportes2 set fechaDelLevantamiento=?,fechaDelCorte=?,descripcion=? where idReporte=?");
 			ps.setInt(1,repo.getIdReporte());
 			java.sql.Date sqlDate = new java.sql.Date(repo.getFechaDelLevantamientoDelReporte().getTime());
 			ps.setDate(2, sqlDate);
@@ -125,7 +127,7 @@ public class DataReporte {
 		boolean elimina=false;
 		cone=co.conectar();
 		try {
-			ps=cone.prepareStatement("update reportes set where idReportes=?");
+			ps=cone.prepareStatement("update reportes2 set where idReportes=?");
 			ps.setInt(1, idReporte);
 			int filasModificadas=ps.executeUpdate();
 			if(filasModificadas>0) {
@@ -147,6 +149,10 @@ public class DataReporte {
 		}
 		return elimina;
 		
+	}
+	public static boolean guardar(DataReporte reporte) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 	
 
